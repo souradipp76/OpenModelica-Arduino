@@ -11,7 +11,7 @@ static int fd;
 int set_interface_attribs (int fd, int speed, int parity)
 {
         struct termios tty;
-        memset (&tty, 0, sizeof tty);
+        memset (&tty, 0, sizeof(tty));
         if (tcgetattr (fd, &tty) != 0)
         {
                 return -1;
@@ -66,7 +66,8 @@ void set_blocking (int b, int should_block)
 }
 
 int open_serial(int handle,int port, int baudrate){
-        char *portname;
+        char* portname;
+        //printf("%d\n",port);
         int OK;
                 switch(port){
                 case 0: portname = "//dev/ttyACM0";break;
@@ -80,8 +81,10 @@ int open_serial(int handle,int port, int baudrate){
                 //default : return;
         }
         OK = 0;
+        //printf("%s\n",portname);
         fd = open (portname, O_RDWR | O_NOCTTY | O_SYNC);
         //fd = open (portname, O_RDWR | O_NOCTTY); //srikant
+        //printf("%d\n",fd);
         if (fd < 0)
         {
                 OK=2;
@@ -99,25 +102,45 @@ int close_serial(int handle){
 }
 
 int write_serial(int handle, char str[],int size){
-        printf("serial write started.\n");
-        write(fd, str, size);
+        if(write(fd, str, size)!=-1)
+        {        
+                printf("serial write started.\n");
+                printf("%s\n",str );
+        }
         usleep(size*100);
         return 0;
 }
 
 
-int* status_serial(int handle){
-        int nb[3];
+int status_serial(int handle,int nb[]){
         nb[0] = 2; 
         nb[1] = 2;
-        nb[2]=0;
-        printf("Getting status.....\n");
-        return nb;
+        int OK=0;
+        //printf("Getting status.....\n");
+        return OK;
 }
 
-char* read_serial(int handle,int size){
-        char buf[size+1];
-        read(fd, buf, size);
-        printf("Reading has commenced..\n");
-        return buf;
+int read_serial(int handle,char buf[],int size){
+        
+        char readbuf[size];
+        if(read(fd, readbuf, size)!=-1)
+        {
+                int i;
+                for (i = 0; i < size; ++i)
+                {
+                        buf[i]=(int)(readbuf[i]);
+                }
+                printf("Reading has commenced..\n");
+                //printf("%d\n",(int)strlen(readbuf));
+                //printf("%s\n",readbuf);
+                return 0;
+        }
+        else
+                return 2 ;
 }
+
+/*void read_serial(int *handle,char buf[],int *size){
+        read(fd, buf, *size);
+        printf("Reading has commenced..\n");
+}*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

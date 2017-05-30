@@ -10,8 +10,9 @@ void set_blocking (int b, int should_block);
 int open_serial(int handle,int port, int baudrate);
 int close_serial(int handle);
 int write_serial(int handle, char str[],int size);
-int* status_serial(int handle);
-char* read_serial(int handle,int size);
+int status_serial(int handle,int nb[]);
+int read_serial(int handle,char* buf,int size);
+//int read_serial(int *handle,char buf[],int *size);
 
 int cmd_digital_out(int h,int pin_no,int val);
 

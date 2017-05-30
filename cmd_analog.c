@@ -9,7 +9,7 @@
 #include "headers/serial.h"
 #include "headers/analog.h"
 
-double cmd_analog_in(int h,int pin_no)
+/*double cmd_analog_in(int h,int pin_no)
 {	
 	char pin[3],v1[2];
 	int wr;
@@ -31,7 +31,7 @@ double cmd_analog_in(int h,int pin_no)
     	temp[i]=(int)values[i];
     }
     return (double)(256*temp[1]+temp[0]);
-}
+}*/
 
 int cmd_analog_out(int h,int pin_no,double val)
 {
@@ -42,7 +42,7 @@ int cmd_analog_out(int h,int pin_no,double val)
         val = 0;
     char code_sent[10];
     strcpy(code_sent,"W");
-    sprintf(v1,"%d",pin_no);
+    sprintf(v1,"%c",pin_no+48);
     sprintf(v2,"%d",abs(ceil(val)));
     strcat(code_sent,v1);
     strcat(code_sent,v2);
