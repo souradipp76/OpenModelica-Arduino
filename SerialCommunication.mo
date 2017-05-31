@@ -6,7 +6,7 @@ A serial communication model for hardware interfacing.
 </p>
 </html>"));
 
-import ModelicaReference.Operators ;
+import ModelicaReference.Operators;
 
 
   function open_serial
