@@ -161,6 +161,19 @@ To map a UNO, ports 2-13 are available (0 and 1 are used for serial transmission
 </html>"));
   end cmd_digital_in;
 
-       
+  function cmd_analog_in
+    input Integer h,pin_no;
+    output Integer val;
+    external val=cmd_analog_in(h,pin_no) annotation(Library="/home/souradip/OpenModelica/Analog.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/analog.h\"");
+  end cmd_analog_in;
+
+
+  function cmd_analog_out
+    input Integer h,pin_no;
+    input Real val;
+    output Integer analog_w_OK;
+    external analog_w_OK=cmd_analog_out(h,pin_no,val) annotation(Library="/home/souradip/OpenModelica/Analog.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/serial.h\"");
+  end cmd_analog_out;     
+  
   end SerialCommunication;  
 end Arduino;

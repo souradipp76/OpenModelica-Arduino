@@ -15,6 +15,7 @@ int read_serial(int handle,char* buf,int size);
 //int read_serial(int *handle,char buf[],int *size);
 
 int cmd_digital_out(int h,int pin_no,int val);
+void delay(long int t);
 
 
 

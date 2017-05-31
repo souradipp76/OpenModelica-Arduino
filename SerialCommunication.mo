@@ -9,8 +9,6 @@ A serial communication model for hardware interfacing.
 import ModelicaReference.Operators ;
 
 
-
-
   function open_serial
     input Integer handle, port, baudrate;
     output Integer OK;
@@ -31,13 +29,12 @@ Establishes a serial communication using port number \"port\".
   end open_serial;
 
 
-
   function read_serial
     input Integer handle;    
     input Integer size;
     output Integer r_OK;
-    //protected String buf="";
-    protected Integer buf[size];
+    //protected String buf[size+1];
+    protected Integer buf[size+1];
     external r_OK=read_serial(handle,buf,size) annotation(
       Library = "/home/souradip/OpenModelica/SerialComm.so",
       LibraryDirectory = "/home/souradip/OpenModelica",
@@ -53,8 +50,6 @@ Intiates serial read through the channel specified by \"handle\" and \"buf\".
 </p>
 </html>"));
   end read_serial;//done
-
-
 
 
   function write_serial
@@ -76,8 +71,6 @@ Intiates serial write through the channel specified by \"handle\" and \"buf\".
   	end write_serial;//done
 
 
-
-
   function close_serial
     input Integer handle;
     output Integer c_OK;
@@ -93,8 +86,6 @@ Closes the port for serial communication specified by \"handle\".
 </p>
 </html>"));
   end close_serial;//done
-
-
 
 
   function status_serial
@@ -116,8 +107,6 @@ Provides status of serial communication channel specified by \"handle\".
   	end status_serial;//done
 
 
-
-
   function cmd_digital_out
     input Integer h,pin_no,val;
     output Integer digital_w_OK;
@@ -126,25 +115,25 @@ Provides status of serial communication channel specified by \"handle\".
   end cmd_digital_out;//done
 
 
-
-
   function cmd_digital_in
     input Integer h,pin_no;
     output Integer digital_in;
 
     external digital_in=cmd_digital_in(h,pin_no) annotation(Library="/home/souradip/OpenModelica/Digital.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/serial.h\"");
-  end cmd_digital_in;
+  end cmd_digital_in;//done
 
-
+  function delay
+    input Integer t;
+    external delay(t) annotation(Library="/home/souradip/OpenModelica/delay.o", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/serial.h\"");
+  end delay;//done
+ 
 
 
   function cmd_analog_in
     input Integer h,pin_no;
-    output Real val;
-    external val=cmd_analog_in(h,pin_no) annotation(Library="/home/souradip/OpenModelica/Analog.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/serial.h\"");
+    output Integer val;
+    external val=cmd_analog_in(h,pin_no) annotation(Library="/home/souradip/OpenModelica/Analog.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/analog.h\"");
   end cmd_analog_in;
-
-
 
 
   function cmd_analog_out
@@ -155,21 +144,18 @@ Provides status of serial communication channel specified by \"handle\".
   end cmd_analog_out;
 
 
-
-
     Integer OK(fixed = true),handle(fixed =true),port(fixed =true),baudrate(fixed =true),c_OK(fixed =false);
     //Integer digital_wr(fixed = false);
     //Integer digital_rd(fixed =false);
-    //Integer analog_rd(fixed = false);
+    Integer analog_rd(fixed = false);
     Integer analog_wr(fixed =false);
-
 
 
   //equation
   algorithm
     handle:=1;
-    port:=2;
-    baudrate:=115200;
+    port:=0;
+    baudrate:=9600;
     OK:=open_serial(handle,port,baudrate);
     if(OK == 0) then
       //w_OK:=SerialCommunication.write_serial(1,"v",1);
@@ -178,9 +164,14 @@ Provides status of serial communication channel specified by \"handle\".
       //if (digital_rd == 0) then
         //digital_wr:=SerialCommunication.cmd_digital_out(handle,11,0);
       //else 
-        //digital_wr:=SerialCommunication.cmd_digital_out(handle,9,1);  
-      //analog_rd:=SerialCommunication.cmd_analog_in(handle,5);
-      analog_wr:=SerialCommunication.cmd_analog_out(handle,10,255);
+        //digital_wr:=SerialCommunication.cmd_digital_out(handle,10,1);
+        //SerialCommunication.delay(1000);
+        //digital_wr:=SerialCommunication.cmd_digital_out(handle,10,0);  
+      analog_rd:=SerialCommunication.cmd_analog_in(handle,2);
+      //if (analog_rd <0) then
+        //analog_wr:=SerialCommunication.cmd_analog_out(handle,10,-1);
+      //else
+        analog_wr:=SerialCommunication.cmd_analog_out(handle,10,analog_rd);
       //end if;
     end if;
     c_OK:=close_serial(1);

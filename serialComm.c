@@ -105,7 +105,7 @@ int write_serial(int handle, char str[],int size){
         if(write(fd, str, size)!=-1)
         {        
                 printf("serial write started.\n");
-                printf("%s\n",str );
+                //printf("%s\n",str );
         }
         usleep(size*100);
         return 0;
@@ -122,17 +122,18 @@ int status_serial(int handle,int nb[]){
 
 int read_serial(int handle,char buf[],int size){
         
-        char readbuf[size];
+        char readbuf[size+1];
         if(read(fd, readbuf, size)!=-1)
         {
                 int i;
                 for (i = 0; i < size; ++i)
                 {
-                        buf[i]=(int)(readbuf[i]);
+                        buf[i]=(char)(readbuf[i]);
                 }
+                buf[size]='\0';
                 printf("Reading has commenced..\n");
-                //printf("%d\n",(int)strlen(readbuf));
-                //printf("%s\n",readbuf);
+                printf("%d\n",(int)strlen(buf));
+                printf("%s\n",buf);
                 return 0;
         }
         else
@@ -142,5 +143,4 @@ int read_serial(int handle,char buf[],int size){
 /*void read_serial(int *handle,char buf[],int *size){
         read(fd, buf, *size);
         printf("Reading has commenced..\n");
-}*/
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+}*/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
