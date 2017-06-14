@@ -12,10 +12,7 @@ import ModelicaReference.Operators;
   function open_serial
     input Integer handle, port, baudrate;
     output Integer OK;
-    external OK=open_serial(handle, port, baudrate) annotation(
-      Library = "/home/souradip/OpenModelica/SerialComm.so",
-      LibraryDirectory = "/home/souradip/OpenModelica",
-      Include = "#include \"/home/souradip/OpenModelica/headers/serial.h\"");
+    external OK=open_serial(handle, port, baudrate) annotation(Library = "/home/souradip/OpenModelica/SerialComm.so",LibraryDirectory = "/home/souradip/OpenModelica", Include = "#include \"/home/souradip/OpenModelica/headers/serial.h\"");
       annotation (Documentation(info="<html>
 <h4>Syntax</h4>
 <blockquote><pre>
@@ -85,7 +82,7 @@ SerialCommunication.<b>close_serial</b>(handle);
 Closes the port for serial communication specified by \"handle\".
 </p>
 </html>"));
-  end close_serial;//done
+  end close_serial;
 
 
   function status_serial
@@ -111,7 +108,7 @@ Provides status of serial communication channel specified by \"handle\".
     input Integer h,pin_no,val;
     output Integer digital_w_OK;
 
-    external digital_w_OK=cmd_digital_out(h,pin_no,val) annotation(Library="/home/souradip/OpenModelica/Digital.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/serial.h\"");
+    external digital_w_OK=cmd_digital_out(h,pin_no,val) annotation(Library="/home/souradip/OpenModelica/Digital.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/digital.h\"");
   end cmd_digital_out;//done
 
 
@@ -140,7 +137,7 @@ Provides status of serial communication channel specified by \"handle\".
     input Integer h,pin_no;
     input Real val;
     output Integer analog_w_OK;
-    external analog_w_OK=cmd_analog_out(h,pin_no,val) annotation(Library="/home/souradip/OpenModelica/Analog.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/serial.h\"");
+    external analog_w_OK=cmd_analog_out(h,pin_no,val) annotation(Library="/home/souradip/OpenModelica/Analog.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/analog.h\"");
   end cmd_analog_out;
 
 
@@ -151,6 +148,59 @@ Provides status of serial communication channel specified by \"handle\".
     Integer analog_wr(fixed =false);
 
 
+  function cmd_analog_in_volt 
+    input Integer h,pin_no;
+    output Integer val;
+    external val=cmd_analog_in_volt(h,pin_no) annotation(Library="/home/souradip/OpenModelica/Analogv.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/analogv.h\"");
+  end cmd_analog_in_volt;
+
+
+
+    function cmd_analog_out_volt
+    input Integer h,pin_no;
+    input Real val;
+    output Integer analog_v_wOK;
+    external analog_v_wOK =cmd_analog_out_volt(h,pin_no,val) annotation(Library="/home/souradip/OpenModelica/Analogv.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/analogv.h\"");
+    
+    end cmd_analog_out_volt;
+
+    
+    function cmd_dcmotor_setup
+    input Integer handle,driver_type,motor_no,pin1,pin2;
+    external cmd_dcmotor_setup(handle,driver_type,motor_no,pin1,pin2) annotation(Library="/home/souradip/OpenModelica/DCMotor.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/dcmotor.h\"");
+    end cmd_dcmotor_setup;
+
+  
+    function cmd_dcmotor_run
+    input Integer handle,motor_no,val;
+    external cmd_dcmotor_run(handle,motor_no,val) annotation(Library="/home/souradip/OpenModelica/DCMotor.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/dcmotor.h\"");
+    end cmd_dcmotor_run;
+
+
+    function cmd_dcmotor_release
+    input Integer handle,motor_no;
+    external cmd_dcmotor_release(handle,motor_no) annotation(Library="/home/souradip/OpenModelica/DCMotor.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/dcmotor.h\"");
+    end cmd_dcmotor_release;
+    
+    
+    function cmd_servo_attach
+    input Integer handle,servo_no;
+    external cmd_servo_attach(handle,servo_no) annotation(Library="/home/souradip/OpenModelica/ServoMotor.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/servomotor.h\"");
+    end cmd_servo_attach;
+    
+
+    function cmd_servo_move
+    input Integer handle,servo_no,val;
+    external cmd_servo_attach(handle,servo_no,val) annotation(Library="/home/souradip/OpenModelica/ServoMotor.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/servomotor.h\"");
+    end cmd_servo_move;
+    
+
+    function cmd_servo_detach
+    input Integer handle,servo_no;
+    external cmd_servo_attach(handle,servo_no) annotation(Library="/home/souradip/OpenModelica/ServoMotor.so", LibraryDirectory="/home/souradip/OpenModelica", Include="#include \"/home/souradip/OpenModelica/headers/servomotor.h\"");
+    end cmd_servo_detach;
+    
+    
   //equation
   algorithm
     handle:=1;
@@ -167,11 +217,11 @@ Provides status of serial communication channel specified by \"handle\".
         //digital_wr:=SerialCommunication.cmd_digital_out(handle,10,1);
         //SerialCommunication.delay(1000);
         //digital_wr:=SerialCommunication.cmd_digital_out(handle,10,0);  
-      analog_rd:=SerialCommunication.cmd_analog_in(handle,2);
+      analog_rd:=SerialCommunication.cmd_analog_in_volt(handle,2);
       //if (analog_rd <0) then
         //analog_wr:=SerialCommunication.cmd_analog_out(handle,10,-1);
       //else
-        analog_wr:=SerialCommunication.cmd_analog_out(handle,10,analog_rd);
+        analog_wr:=SerialCommunication.cmd_analog_out_volt(handle,10,analog_rd);
       //end if;
     end if;
     c_OK:=close_serial(1);
