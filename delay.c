@@ -6,5 +6,5 @@
 
 void delay(long int t)
 { 
-	sleep(abs(t/1000));	
+	usleep(abs(t*1000));	
 }
