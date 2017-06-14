@@ -18,10 +18,10 @@ int set_interface_attribs (int fd, int speed, int parity)
         }
         int posix_baudrate=0;
 
-switch(speed) {
-case 115200: posix_baudrate = B115200; break;
-//default: return ;
-}
+        switch(speed) {
+        case 115200: posix_baudrate = B115200; break;
+        default: return -1;
+        }
         cfsetospeed (&tty, posix_baudrate);
         cfsetispeed (&tty, posix_baudrate);
 
@@ -63,6 +63,9 @@ void set_blocking (int b, int should_block)
 
         tty.c_cc[VMIN]  = should_block ? 1 : 0;
         tty.c_cc[VTIME] = 5;            // 0.5 seconds read timeout
+
+        //if (tcsetattr (fd, TCSANOW, &tty) != 0)
+        //       error_message ("error %d setting term attributes", errno);
 }
 
 int open_serial(int handle,int port, int baudrate){
@@ -78,7 +81,7 @@ int open_serial(int handle,int port, int baudrate){
                 case 5: portname = "//dev/ttyACM5";break;
                 case 6: portname = "//dev/ttyACM6";break;
                 case 7: portname = "//dev/ttyACM7";break;
-                //default : return;
+                default : return 2;
         }
         OK = 0;
         //printf("%s\n",portname);
@@ -88,6 +91,7 @@ int open_serial(int handle,int port, int baudrate){
         if (fd < 0)
         {
                 OK=2;
+                return OK;
         }
         set_interface_attribs (fd, baudrate, 0);
         set_blocking (fd, 0);                // set no blocking
@@ -139,8 +143,7 @@ int read_serial(int handle,char buf[],int size){
         else
                 return 2 ;
 }
-
 /*void read_serial(int *handle,char buf[],int *size){
         read(fd, buf, *size);
         printf("Reading has commenced..\n");
-}*/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+}*/
