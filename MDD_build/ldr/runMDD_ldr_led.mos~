@@ -4,9 +4,6 @@ getErrorString();
 loadFile("/home/souradip/Modelica_DeviceDrivers/Modelica_DeviceDrivers/package.mo");
 getErrorString();
 
-loadFile("/home/souradip/om-interface/AnalogReadRealmo");
-getErrorString();
-
 loadFile("/home/souradip/OpenModelica/Arduino.mo");
 getErrorString();
 
