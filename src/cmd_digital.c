@@ -10,7 +10,7 @@
 
 int cmd_digital_out(int h,int pin_no,int val)
 {   
-	int wr=2;
+	int wr;
 	char pin[6]="Da";
     char v[2],temp[2];
 	sprintf(temp,"%c",pin_no+48);
