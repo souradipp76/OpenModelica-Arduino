@@ -1,350 +1,326 @@
 package Arduino
-  extends Modelica.Icons.Package;
+  extends Modelica_DeviceDrivers.Utilities.Icons.GenericICPackage;
 
   package SerialCommunication "Serial Communication Package for Arduino"
-    extends Modelica.Icons.Package;
+    extends Modelica_DeviceDrivers.Utilities.Icons.FunctionLayerIcon;
     import ModelicaReference.Operators;
 
-    function open_serial "Command to initialize the serial port which is connected to Arduino"
-      extends Modelica.Icons.Function;
-      input Integer handle, port, baudrate;
-      output Integer OK;
-    
-      external OK = open_serial(handle, port, baudrate) annotation(
-        Library = "/home/souradip/OpenModelica/SerialComm.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/serial.h\"");
-      annotation(
-        Documentation(info = "<html>
+    package Functions
+      extends Modelica.Icons.Package;
+      import Modelica;
+
+      function open_serial "Command to initialize the serial port which is connected to Arduino"
+        extends Modelica.Icons.Function;
+        input Integer handle, port, baudrate;
+        output Integer OK;
+      
+        external OK = open_serial(handle, port, baudrate) annotation(
+          Library = "SerialComm");
+        annotation(
+          Documentation(info = "<html>
 <h4>Syntax</h4>
 <blockquote><pre>
-Arduino.SerialCommunication.<b>open_serial</b>(handle,port,baudrate);
+Arduino.SerialCommunication.Functions.<b>open_serial</b>(handle,port,baudrate);
 </pre></blockquote>
 <h4>Description</h4>
 <p>
 Establishes a serial communication using port number \"port\".To connect to the Arduino board, check the port number from the device manager or check it from the Arduino software.
 </p>
 </html>"));
-    end open_serial;
+      end open_serial;
 
-    function read_serial "read characters from serial port"
-      extends Modelica.Icons.Function;
-      input Integer handle;
-      input Integer size;
-      output Integer r_OK;
-    protected
-      Integer buf[size + 1];
-    
-      external r_OK = read_serial(handle, buf, size) annotation(
-        Library = "/home/souradip/OpenModelica/SerialComm.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/serial.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function read_serial "read characters from serial port"
+        extends Modelica.Icons.Function;
+        input Integer handle;
+        input Integer size;
+        output Integer r_OK;
+      protected
+        Integer buf[size + 1];
+        //String buf;
+      
+        external r_OK = read_serial(handle, buf, size) annotation(
+          Library = "SerialComm");
+        annotation(
+          Documentation(info = "<html>
 <h4>Syntax</h4>
 <blockquote><pre>
-Arduino.SerialCommunication.<b>read_serial</b>(handle,size);
+Arduino.SerialCommunication.Functions.<b>read_serial</b>(handle,size);
 </pre></blockquote>
 <h4>Description</h4>
 <p>The translation setting of openserial can come in the way, affecting the number of characters effectively read. If that is the case, omitting the parameter n might be a bad idea, as scilab can hang. This would happen if the input stream contains CR or LF characters which are filtered out: in such cases serialstatus counts them, but readserial does not see them and keeps wating (if the blocking mode of openserial was true) until the total number is received.
 </p>
 </html>"));
-    end read_serial;
+      end read_serial;
 
-    function write_serial "write to the serial port"
-      extends Modelica.Icons.Function;
-      input Integer handle;
-      input String str;
-      input Integer size;
-      output Integer w_OK;
-    
-      external w_OK = write_serial(handle, str, size) annotation(
-        Library = "/home/souradip/OpenModelica/SerialComm.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/serial.h\"");
-      annotation(
-        Documentation(info = "<html>
+      //algorithm
+      //Modelica.Utilities.Streams.print(String(buf));
+
+      function write_serial "write to the serial port"
+        extends Modelica.Icons.Function;
+        input Integer handle;
+        input String str;
+        input Integer size;
+        output Integer w_OK;
+      
+        external w_OK = write_serial(handle, str, size) annotation(
+          Library = "SerialComm");
+        annotation(
+          Documentation(info = "<html>
 <h4>Syntax</h4>
 <blockquote><pre>
-Arduino.SerialCommunication.<b>write_serial</b>(handle,str,size);
+Arduino.SerialCommunication.Functions.<b>write_serial</b>(handle,str,size);
 </pre></blockquote>
 <h4>Description</h4>
 <p>No end of line character is appended to the string; the user might have to add it if the device being talked to requires it. The Tcl command puts -nonewline is used. In addition, the translation mode of openserial can come into way.
 </p>
 </html>"));
-    end write_serial;
+      end write_serial;
 
-    function close_serial "Command to close the serial port which is connected to Arduino"
-      extends Modelica.Icons.Function;
-      input Integer handle;
-      output Integer c_OK;
-    
-      external c_OK = close_serial(handle) annotation(
-        Library = "/home/souradip/OpenModelica/SerialComm.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/serial.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function close_serial "Command to close the serial port which is connected to Arduino"
+        extends Modelica.Icons.Function;
+        input Integer handle;
+        output Integer c_OK;
+      
+        external c_OK = close_serial(handle) annotation(
+          Library = "SerialComm");
+        annotation(
+          Documentation(info = "<html>
 <h4>Syntax</h4>
 <blockquote><pre>
-Arduino.SerialCommunication.<b>close_serial</b>(handle);
+Arduino.SerialCommunication.Functions.<b>close_serial</b>(handle);
 </pre></blockquote>
 <h4>Description</h4>
 <p>Closes the port for serial communication specified by \"handle\".It is important to close the serial port after use, else the port would be busy and restart of Scilab might required to connect to it again.
 </p>
 </html>"));
-    end close_serial;
+      end close_serial;
 
-    function status_serial "get status of the serial port"
-      extends Modelica.Icons.Function;
-      input Integer handle;
-      output Integer stat_OK;
-    protected
-      Integer bytes[2];
-    
-      external stat_OK = status_serial(handle, bytes) annotation(
-        Library = "/home/souradip/OpenModelica/SerialComm.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/serial.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function status_serial "get status of the serial port"
+        extends Modelica.Icons.Function;
+        input Integer handle;
+        output Integer stat_OK;
+      protected
+        Integer bytes[2];
+      
+        external stat_OK = status_serial(handle, bytes) annotation(
+          Library = "SerialComm");
+        annotation(
+          Documentation(info = "<html>
 <h4>Syntax</h4>
 <blockquote><pre>
-Arduino.SerialCommunication.<b>status_serial</b>(handle);
+Arduino.SerialCommunication.Functions.<b>status_serial</b>(handle);
 </pre></blockquote>
 <h4>Description</h4>
-<p>Provides status of serial communication channel specified by \"handle\".Get some information about the number of characters present in the input and output buffers of the serial port, and about the status lines (DTS, CTS, ecc.).The translation setting of openserial can come in the way. If the input stream contains CR or LF characters which are filtered out, openserial counts them but readserial does not see them.
+<p>Provides status of serial communication channel specified by \"handle\".Get some information about the number of characters present in the input and output buffers of the serial port, and about the status lines (DTS, CTS, etc.).The translation setting of openserial can come in the way. If the input stream contains CR or LF characters which are filtered out, openserial counts them but readserial does not see them.
 </p>
 </html>"));
-    end status_serial;
+      end status_serial;
 
-    function cmd_digital_out "Command to sent out digital signal to a connected Arduino board"
-      extends Modelica.Icons.Function;
-      input Integer h, pin_no, val;
-      output Integer digital_w_OK;
-    
-      external digital_w_OK = cmd_digital_out(h, pin_no, val) annotation(
-        Library = "/home/souradip/OpenModelica/Digital.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/digital.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_digital_out "Command to sent out digital signal to a connected Arduino board"
+        extends Modelica.Icons.Function;
+        input Integer h, pin_no, val;
+        output Integer digital_w_OK;
+      
+        external digital_w_OK = cmd_digital_out(h, pin_no, val) annotation(
+          Library = "Digital");
+        annotation(
+          Documentation(info = "<html>
 <h4>Syntax</h4>
 <blockquote><pre>
-Arduino.SerialCommunication.<b>cmd_digital_in</b>(h,pin_no);
+Arduino.SerialCommunication.Functions.<b>cmd_digital_out</b>(handle,pin_no,value);
 </pre></blockquote>
 <h4>Description</h4>
 <p>The Arduino board has a set of logical ports (digital) that are used for writing or reading data from a component.
 To map a UNO, ports 2-13 are available (0 and 1 are used for serial transmission). For MEGA board, ports 2-53 are available. The port takes the low logic level (0) or logic high (1) which corresponds to the reference voltage.
 </p>
 </html>"));
-    end cmd_digital_out;
+      end cmd_digital_out;
 
-    function cmd_digital_in "Command to read in digital signal from a connected Arduino board"
-      extends Modelica.Icons.Function;
-      input Integer h, pin_no;
-      output Integer digital_in;
-    
-      external digital_in = cmd_digital_in(h, pin_no) annotation(
-        Library = "/home/souradip/OpenModelica/Digital.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/digital.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_digital_in "Command to read in digital signal from a connected Arduino board"
+        extends Modelica.Icons.Function;
+        input Integer h, pin_no;
+        output Integer digital_in;
+      
+        external digital_in = cmd_digital_in(h, pin_no) annotation(
+          Library = "Digital");
+        annotation(
+          Documentation(info = "<html>
 <h4>Syntax</h4>
 <blockquote><pre>
-Arduino.SerialCommunication.<b>cmd_digital_in</b>(h,pin_no);
+Arduino.SerialCommunication.Functions.<b>cmd_digital_in</b>(handle,pin_no);
 </pre></blockquote>
 <h4>Description</h4>
 <p>The Arduino board has a set of logical ports (digital) that are used for writing or reading data from a component.
 To map a UNO, ports 2-13 are available (0 and 1 are used for serial transmission). For MEGA board, ports 2-53 are available. The port takes the low logic level (0) or logic high (1) which corresponds to the reference voltage.
 </p>
 </html>"));
-    end cmd_digital_in;
+      end cmd_digital_in;
 
-    function delay "Provides delay.Suspends Openmodelica."
-      extends Modelica.Icons.Function;
-      input Integer t;
-    
-      external delay(t) annotation(
-        Library = "/home/souradip/OpenModelica/delay.o",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/serial.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function delay "Provides delay.Suspends Openmodelica."
+        extends Modelica.Icons.Function;
+        input Integer t;
+      
+        external delay(t) annotation(
+          Library = "delay");
+        annotation(
+          Documentation(info = "<html>
   <h4>Syntax</h4>
   <blockquote><pre>
-  Arduino.SerialCommunication.<b>delay</b>(milliseconds);
+  Arduino.SerialCommunication.Functions.<b>delay</b>(milliseconds);
   </pre></blockquote>
   <h4>Description</h4>
   <p>Delay process for specified number of miliseconds specified by the argument. The actual suspension time may be longer because of other activities in the system, or because of the time spent in processing the call.
   </p>
   </html>"));
-    end delay;
+      end delay;
 
-    function cmd_analog_in "Command to read in analog signal from a connected Arduino board"
-      extends Modelica.Icons.Function;
-      input Integer h, pin_no;
-      output Integer val;
-    
-      external val = cmd_analog_in(h, pin_no) annotation(
-        Library = "/home/souradip/OpenModelica/Analog.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/analog.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_analog_in "Command to read in analog signal from a connected Arduino board"
+        extends Modelica.Icons.Function;
+        input Integer h, pin_no;
+        output Integer val;
+      
+        external val = cmd_analog_in(h, pin_no) annotation(
+          Library = "Analog");
+        annotation(
+          Documentation(info = "<html>
 <h4>Syntax</h4>
 <blockquote><pre>
-Arduino.SerialCommunication.<b>cmd_analog_in</b>(h,pin_no);
+Arduino.SerialCommunication.Functions.<b>cmd_analog_in</b>(handle,pin_no);
 </pre></blockquote>
 <h4>Description</h4>
 <p>Arduino UNO board has 6 analog input ports (A0 to A5), the Arduino Mega board has 16 analog input ports (A0 to A15). The 10 bits channels convert the analog input from 0 to 5 volts, to a digital value between 0 and 1023.
 </p>
 </html>"));
-    end cmd_analog_in;
+      end cmd_analog_in;
 
-    function cmd_analog_out "Command to sent out analog signal to a connected Arduino board"
-      extends Modelica.Icons.Function;
-      input Integer h, pin_no;
-      input Real val;
-      output Integer analog_w_OK;
-    
-      external analog_w_OK = cmd_analog_out(h, pin_no, val) annotation(
-        Library = "/home/souradip/OpenModelica/Analog.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/analog.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_analog_out "Command to sent out analog signal to a connected Arduino board"
+        extends Modelica.Icons.Function;
+        input Integer h, pin_no;
+        input Real val;
+        output Integer analog_w_OK;
+      
+        external analog_w_OK = cmd_analog_out(h, pin_no, val) annotation(
+          Library = "Analog");
+        annotation(
+          Documentation(info = "<html>
 <h4>Syntax</h4>
 <blockquote><pre>
-Arduino.SerialCommunication.<b>cmd_analog_out</b>(h,pin_no,val);
+Arduino.SerialCommunication.Functions.<b>cmd_analog_out</b>(handle,pin_no,val);
 </pre></blockquote>
 <h4>Description</h4>
 <p>The analog outputs of the Arduino Uno is available at the pins 3,5,6,9,10 and 11, while on the Mega board, the outputs are on pins 1-13 and 44-46. It is a bit misleading to use the term 'analog output', because in order to generate this output while minimizing energy losses, the Arduino uses PWM (Pulse Width Modulation) available on these ports. By varying the duty cycle of the PWM is altered the average voltage across the component connected to this port, which has the effect of having a analog output voltage.
 The input port accepts the value from 0 to 255 which is correspoding to the duty cycle of 0 to 100%. In other words, sending 0 to the block will generate 0 V output at the port, 127 generates 2.5V and 255 generates 5V. (the port is 8 bits, so the resolutions of output would be 2^8 =256).
 </p>
 </html>"));
-    end cmd_analog_out;
+      end cmd_analog_out;
 
-    function cmd_analog_in_volt "Command to read in analog signal from a connected Arduino board"
-      extends Modelica.Icons.Function;
-      input Integer h, pin_no;
-      output Integer val;
-    
-      external val = cmd_analog_in_volt(h, pin_no) annotation(
-        Library = "/home/souradip/OpenModelica/Analogv.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/analogv.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_analog_in_volt "Command to read in analog signal from a connected Arduino board"
+        extends Modelica.Icons.Function;
+        input Integer h, pin_no;
+        output Integer val;
+      
+        external val = cmd_analog_in_volt(h, pin_no) annotation(
+          Library = "Analogv");
+        annotation(
+          Documentation(info = "<html>
   <h4>Syntax</h4>
   <blockquote><pre>
-  Arduino.SerialCommunication.<b>cmd_analog_in_volt</b>(h,pin_no);
+  Arduino.SerialCommunication.Functions.<b>cmd_analog_in_volt</b>(handle,pin_no);
   </pre></blockquote>
   <h4>Description</h4>
   <p>Arduino UNO board has 6 analog input ports (A0 to A5), the Arduino Mega board has 16 analog input ports (A0 to A15). The 10 bits channels convert the analog input from 0 to 5 volts, to a digital value between 0 and 1023. This function scale the reading to 0-5 so the user could get the measured voltage directly.
   </p>
   </html>"));
-    end cmd_analog_in_volt;
+      end cmd_analog_in_volt;
 
-    function cmd_analog_out_volt "Command to sent out analog signal to a connected Arduino board"
-      extends Modelica.Icons.Function;
-      input Integer h, pin_no;
-      input Real val;
-      output Integer analog_v_wOK;
-    
-      external analog_v_wOK = cmd_analog_out_volt(h, pin_no, val) annotation(
-        Library = "/home/souradip/OpenModelica/Analogv.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/analogv.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_analog_out_volt "Command to sent out analog signal to a connected Arduino board"
+        extends Modelica.Icons.Function;
+        input Integer h, pin_no;
+        input Real val;
+        output Integer analog_v_wOK;
+      
+        external analog_v_wOK = cmd_analog_out_volt(h, pin_no, val) annotation(
+          Library = "Analogv");
+        annotation(
+          Documentation(info = "<html>
   <h4>Syntax</h4>
   <blockquote><pre>
-  Arduino.SerialCommunication.<b>cmd_analog_out_volt</b>(h,pin_no,val);
+  Arduino.SerialCommunication.Functions.<b>cmd_analog_out_volt</b>(handle,pin_no,val);
   </pre></blockquote>
   <h4>Description</h4>
   <p>The analog outputs of the Arduino Uno is available at the pins 3,5,6,9,10 and 11, while on the Mega board, the outputs are on pins 1-13 and 44-46. It is a bit misleading to use the term 'analog output', because in order to generate this output while minimizing energy losses, the Arduino uses PWM (Pulse Width Modulation) available on these ports. By varying the duty cycle of the PWM is altered the average voltage across the component connected to this port, which has the effect of having a analog output voltage.
   </p>
   </html>"));
-    end cmd_analog_out_volt;
+      end cmd_analog_out_volt;
 
-    function cmd_dcmotor_setup "Command to setup pins to control DC motor"
-      extends Modelica.Icons.Function;
-      input Integer handle, driver_type, motor_no, pin1, pin2;
-    
-      external cmd_dcmotor_setup(handle, driver_type, motor_no, pin1, pin2) annotation(
-        Library = "/home/souradip/OpenModelica/DCMotor.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/dcmotor.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_dcmotor_setup "Command to setup pins to control DC motor"
+        extends Modelica.Icons.Function;
+        input Integer handle, driver_type, motor_no, pin1, pin2;
+      
+        external cmd_dcmotor_setup(handle, driver_type, motor_no, pin1, pin2) annotation(
+          Library = "DCMotor");
+        annotation(
+          Documentation(info = "<html>
       <h4>Syntax</h4>
       <blockquote><pre>
-      Arduino.SerialCommunication.<b>cmd_dcmotor_setup</b>(handle,driver_type,motor_no,pin_no1,pin_no2);
+      Arduino.SerialCommunication.Functions.<b>cmd_dcmotor_setup</b>(handle,driver_type,motor_no,pin_no1,pin_no2);
       </pre></blockquote>
       <h4>Description</h4>
       <p>Arduino board does not deliver enough power, so it is necessary to use a H-bridge circuit/IC to control the motor. There are several types of H-bridge IC that do not all operate on the same principle. For example, the L298 requires the use of a PWM signal with current sense. The L293 uses two PWM to set the speed and direction. Ready-to-use Shields are also available.
       Remember that the PWM is 8-bit (0 to 255). The input of the block could accept any value, but it would saturate at +- 255.
       </p>
       </html>"));
-    end cmd_dcmotor_setup;
+      end cmd_dcmotor_setup;
 
-    function cmd_dcmotor_run "Command to run DC motor after setting up"
-      extends Modelica.Icons.Function;
-      input Integer handle, motor_no, val;
-    
-      external cmd_dcmotor_run(handle, motor_no, val) annotation(
-        Library = "/home/souradip/OpenModelica/DCMotor.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/dcmotor.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_dcmotor_run "Command to run DC motor after setting up"
+        extends Modelica.Icons.Function;
+        input Integer handle, motor_no, val;
+      
+        external cmd_dcmotor_run(handle, motor_no, val) annotation(
+          Library = "DCMotor");
+        annotation(
+          Documentation(info = "<html>
     <h4>Syntax</h4>
     <blockquote><pre>
-    Arduino.SerialCommunication.<b>cmd_dcmotor_run</b>(handle,motor_no,value);
+    Arduino.SerialCommunication.Functions.<b>cmd_dcmotor_run</b>(handle,motor_no,value);
     </pre></blockquote>
     <h4>Description</h4>
     <p>Arduino board does not deliver enough power, so it is necessary to use a H-bridge circuit/IC to control the motor. There are several types of H-bridge IC that do not all operate on the same principle. For example, the L298 requires the use of a PWM signal with current sense. The L293 uses two PWM to set the speed and direction. Ready-to-use Shields are also available.
     Remember that the PWM is 8-bit (0 to 255). The input of the block could accept any value, but it would saturate at +- 255.
     </p>
     </html>"));
-    end cmd_dcmotor_run;
+      end cmd_dcmotor_run;
 
-    function cmd_dcmotor_release "Command to release pins which have setup for DC motor"
-      extends Modelica.Icons.Function;
-      input Integer handle, motor_no;
-    
-      external cmd_dcmotor_release(handle, motor_no) annotation(
-        Library = "/home/souradip/OpenModelica/DCMotor.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/dcmotor.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_dcmotor_release "Command to release pins which have setup for DC motor"
+        extends Modelica.Icons.Function;
+        input Integer handle, motor_no;
+      
+        external cmd_dcmotor_release(handle, motor_no) annotation(
+          Library = "DCMotor");
+        annotation(
+          Documentation(info = "<html>
     <h4>Syntax</h4>
     <blockquote><pre>
-    Arduino.SerialCommunication.<b>cmd_dcmotor_release</b>(handle,motor_no);
+    Arduino.SerialCommunication.Functions.<b>cmd_dcmotor_release</b>(handle,motor_no);
     </pre></blockquote>
     <h4>Description</h4>
     <p>Arduino board does not deliver enough power, so it is necessary to use a H-bridge circuit/IC to control the motor. There are several types of H-bridge IC that do not all operate on the same principle. For example, the L298 requires the use of a PWM signal with current sense. The L293 uses two PWM to set the speed and direction. Ready-to-use Shields are also available.
     Remember that the PWM is 8-bit (0 to 255). The input of the block could accept any value, but it would saturate at +- 255.
     </p>
     </html>"));
-    end cmd_dcmotor_release;
+      end cmd_dcmotor_release;
 
-    function cmd_servo_attach "Command to attach servo motor to Arduino"
-      extends Modelica.Icons.Function;
-      input Integer handle, servo_no;
-    
-      external cmd_servo_attach(handle, servo_no) annotation(
-        Library = "/home/souradip/OpenModelica/ServoMotor.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/servomotor.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_servo_attach "Command to attach servo motor to Arduino"
+        extends Modelica.Icons.Function;
+        input Integer handle, servo_no;
+      
+        external cmd_servo_attach(handle, servo_no) annotation(
+          Library = "ServoMotor");
+        annotation(
+          Documentation(info = "<html>
   <h4>Syntax</h4>
   <blockquote><pre>
-  Arduino.SerialCommunication.<b>cmd_servo_attach</b>(handle,servo_no);
+  Arduino.SerialCommunication.Functions.<b>cmd_servo_attach</b>(handle,servo_no);
   </pre></blockquote>
   <h4>Description</h4>
   <p>A servomotor is an rotary actuator consist of an electric motor, gears, a potentiometer and an analogue or digital electronics for control. The servomotor usualy used for a position control application (or speed for continuous rotation servos).
@@ -352,21 +328,19 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
   A servomotor for continuous rotation, the pulse width control the rotational speed and the direction. It is recommended to use a voltage regulator to power the servomotor instead of using the Arduino board power. For simplicity, the function takes an input commnad in degrees from 0 to 180. Two actuators can be controlled with this toolbox. (modified version of 3 motors available)
   </p>
   </html>"));
-    end cmd_servo_attach;
+      end cmd_servo_attach;
 
-    function cmd_servo_move "Command to run servo motor which has been setup"
-      extends Modelica.Icons.Function;
-      input Integer handle, servo_no, val;
-    
-      external cmd_servo_move(handle, servo_no, val) annotation(
-        Library = "/home/souradip/OpenModelica/ServoMotor.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/servomotor.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_servo_move "Command to run servo motor which has been setup"
+        extends Modelica.Icons.Function;
+        input Integer handle, servo_no, val;
+      
+        external cmd_servo_move(handle, servo_no, val) annotation(
+          Library = "ServoMotor");
+        annotation(
+          Documentation(info = "<html>
   <h4>Syntax</h4>
   <blockquote><pre>
-  Arduino.SerialCommunication.<b>cmd_servo_move</b>(handle,servo_no,value);
+  Arduino.SerialCommunication.Functions.<b>cmd_servo_move</b>(handle,servo_no,value);
   </pre></blockquote>
   <h4>Description</h4>
   <p>A servomotor is an rotary actuator consist of an electric motor, gears, a potentiometer and an analogue or digital electronics for control. The servomotor usualy used for a position control application (or speed for continuous rotation servos).
@@ -374,21 +348,19 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
   A servomotor for continuous rotation, the pulse width control the rotational speed and the direction. It is recommended to use a voltage regulator to power the servomotor instead of using the Arduino board power. For simplicity, the function takes an input commnad in degrees from 0 to 180. Two actuators can be controlled with this toolbox. (modified version of 3 motors available)
   </p>
   </html>"));
-    end cmd_servo_move;
+      end cmd_servo_move;
 
-    function cmd_servo_detach "Command to release the pin which has been setup for servo motor"
-      extends Modelica.Icons.Function;
-      input Integer handle, servo_no;
-    
-      external cmd_servo_attach(handle, servo_no) annotation(
-        Library = "/home/souradip/OpenModelica/ServoMotor.so",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/servomotor.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_servo_detach "Command to release the pin which has been setup for servo motor"
+        extends Modelica.Icons.Function;
+        input Integer handle, servo_no;
+      
+        external cmd_servo_attach(handle, servo_no) annotation(
+          Library = "ServoMotor");
+        annotation(
+          Documentation(info = "<html>
   <h4>Syntax</h4>
   <blockquote><pre>
-  Arduino.SerialCommunication.<b>cmd_servo_detach</b>(handle,servo_no);
+  Arduino.SerialCommunication.Functions.<b>cmd_servo_detach</b>(handle,servo_no);
   </pre></blockquote>
   <h4>Description</h4>
   <p>A servomotor is an rotary actuator consist of an electric motor, gears, a potentiometer and an analogue or digital electronics for control. The servomotor usualy used for a position control application (or speed for continuous rotation servos).
@@ -396,46 +368,53 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
   A servomotor for continuous rotation, the pulse width control the rotational speed and the direction. It is recommended to use a voltage regulator to power the servomotor instead of using the Arduino board power. For simplicity, the function takes an input commnad in degrees from 0 to 180. Two actuators can be controlled with this toolbox. (modified version of 3 motors available)
   </p>
   </html>"));
-    end cmd_servo_detach;
+      end cmd_servo_detach;
 
-    function ieeesingle2num
-      extends Modelica.Icons.Function;
-      input String hexa;
-      output Real y;
-    
-      external y = ieeesingle2num(hexa) annotation(
-        Library = "/home/souradip/OpenModelica/ieeesingle2num.o",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/serial.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function ieeesingle2num "ieee-745 floating point converter"
+        extends Modelica.Icons.Function;
+        input String hexa;
+        output Real y;
+      
+        external y = ieeesingle2num(hexa) annotation(
+          Library = "ieeesingle2num");
+        annotation(
+          Documentation(info = "<html>
 <h4>Syntax</h4>
 <blockquote><pre>
-Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
+Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
 </pre></blockquote>
 <h4>Description</h4>
-<p>
-</p>
+<p>Converts an hexadecimal integer to ieee single precision format
+    </p>
 </html>"));
-    end ieeesingle2num;
+      end ieeesingle2num;
 
-    function mfloor
-      extends Modelica.Icons.Function;
-      input Real x;
-      output Integer y;
-    
-      external y = mfloor(x) annotation(
-        Library = "/home/souradip/OpenModelica/mfloor.o",
-        LibraryDirectory = "/home/souradip/OpenModelica");
-    end mfloor;
+      function math_floor "Floor function"
+        extends Modelica.Icons.Function;
+        input Real x;
+        output Integer y;
+      
+        external y = mfloor(x) annotation(
+          Library = "floor");
+        annotation(
+          Documentation(info = "<html>
+    <h4>Syntax</h4>
+    <blockquote><pre>
+    Arduino.SerialCommunication.Functions.<b>math_floor</b>(x);
+    </pre></blockquote>
+    <h4>Description</h4>
+    <p>Returns the greatest integer less than or equal to x
+    </p>
+    </html>"));
+      end math_floor;
 
-    function getArduinoVersion "Returns the Arduino version used"
-      extends Modelica.Icons.Function;
-      output String arduinoVersion(fixed = true);
-    algorithm
-      arduinoVersion := "1.1";
-      annotation(
-        Documentation(info = "<html>
+      function getArduinoVersion "Returns the Arduino version used"
+        extends Modelica.Icons.Function;
+        output String arduinoVersion(fixed = true);
+      algorithm
+        arduinoVersion := "1.1";
+        annotation(
+          Documentation(info = "<html>
   <h4>Syntax</h4>
   <blockquote><pre>
   Arduino.SerialCommunication.<b>getArduinoVersion</b>();
@@ -444,29 +423,70 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
   <p>Gives the version of the arduino used.
   </p>
   </html>"));
-    end getArduinoVersion;
+      end getArduinoVersion;
 
-    function cmd_encoder_init "Initiates the encoder"
-      extends Modelica.Icons.Function;
-      input Integer h, encoder_mode, pin_no1, pin_no2;
-    
-      external cmd_encoder_init(h, encoder_mode, pin_no1, pin_no2) annotation(
-        Library = "/home/souradip/OpenModelica/Encoder.o",
-        LibraryDirectory = "/home/souradip/OpenModelica",
-        Include = "#include \"/home/souradip/OpenModelica/headers/encoder.h\"");
-      annotation(
-        Documentation(info = "<html>
+      function cmd_encoder_init "Initiates the encoder"
+        extends Modelica.Icons.Function;
+        input Integer h, encoder_mode, pin_no1, pin_no2;
+      
+        external cmd_encoder_init(h, encoder_mode, pin_no1, pin_no2) annotation(
+          Library = "Encoder");
+        annotation(
+          Documentation(info = "<html>
   <h4>Syntax</h4>
   <blockquote><pre>
-  Arduino.SerialCommunication.<b>getArduinoVersion</b>();
+  Arduino.SerialCommunication.<b>cmd_encoder_init</b>(handle,encoder_mode,pin_no1,pin_no2);
   </pre></blockquote>
   <h4>Description</h4>
-  <p>
+  <p>Used to read encoder signal from one or more channels
   </p>
   </html>"));
-    end cmd_encoder_init;
+      end cmd_encoder_init;
 
-    //Incomplete
+      //Incomplete
+
+      package MDD_Servo
+        extends Modelica.Icons.Package;
+
+        class Init
+          extends ExternalObject;
+
+          function constructor "Return device handle"
+            extends .Modelica.Icons.Function;
+            import Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions;
+            import Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types;
+            import sComm = Arduino.SerialCommunication.Functions;
+            import Arduino.SerialCommunication.Functions.MDD_Servo;
+            input sComm.Types.Servo_no servo_no;
+            output sComm.Functions.MDD_Servo.Init servo;
+          
+            external "C" servo = MDD_avr_servo_initialize(servo_no) annotation(
+              Include = "#include \"/home/souradip/OpenModelica/Resources/Include/MDDAVRServo.h\"");
+          end constructor;
+
+          function destructor "Destructor"
+            extends .Modelica.Icons.Function;
+            import Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types;
+            import sComm = Arduino.SerialCommunication.Functions;
+            import Arduino.SerialCommunication.Functions.MDD_Servo;
+            input sComm.Types.Servo_no servo_no "Device handle";
+          
+            external "C" MDD_avr_servo_finalize(servo_no) annotation(
+              Include = "#include \"/home/souradip/OpenModelica/Resources/Include/MDDAVRServo.h\"");
+          end destructor;
+        end Init;
+
+        function Move
+          extends Modelica.Icons.Function;
+          import sComm = Arduino.SerialCommunication.Functions;
+          input sComm.Functions.MDD_Servo.Init servo;
+          input Integer value;
+        
+          external "C" MDD_avr_servo_move(servo, value) annotation(
+            Include = "#include \"/home/souradip/OpenModelica/Resources/Include/MDDAVRServo.h\"");
+        end Move;
+      end MDD_Servo;
+    end Functions;
 
     package Examples
       extends Modelica.Icons.ExamplesPackage;
@@ -474,13 +494,13 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
       package led
         extends Modelica.Icons.ExamplesPackage;
 
-        model led_blue
+        model led_blue "Turn on Blue LED"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = true);
           Integer digital_out(fixed = true);
-          //Integer c_ok(fixed = false);
+          Integer c_ok(fixed = false);
         algorithm
           ok := sComm.open_serial(1, 0, 115200) "At port 0 with baudrate of 115200";
           if ok <> 0 then
@@ -488,19 +508,23 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
           else
             sComm.delay(1000);
             digital_out := sComm.cmd_digital_out(1, 9, 1) "This will turn ON the blue LED";
-            sComm.delay(5000);
           end if;
-//c_ok := sComm.close_serial(1) "To close the connection safely";
+//sComm.delay(5000);
+//strm.print(String(time));
+          when terminal() then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end when;
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 10));
         end led_blue;
 
-        model led_blue_delay
+        model led_blue_delay "Turn on Blue LED for a period of 2 seconds"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
           Integer digital_out(fixed = false);
-          //Integer c_ok(fixed = false);
+          Integer c_ok(fixed = false);
         algorithm
           ok := sComm.open_serial(1, 0, 115200) "At port 0 with baudrate of 115200";
 //sComm.delay(100);
@@ -512,20 +536,24 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
             digital_out := sComm.cmd_digital_out(1, 9, 0) "turn off blue LED";
             sComm.delay(2000) "let the blue LED be off for two seconds";
           end if;
-//c_ok := sComm.close_serial(1) "To close the connection safely";
+          strm.print(String(time));
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 10));
         end led_blue_delay;
 
-        model led_blue_red
+        model led_blue_red "Turn on Red & Blue LED"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
           Integer digital_out(fixed = false);
           Integer c_ok(fixed = false);
         algorithm
           ok := sComm.open_serial(1, 0, 115200) "At port 0 with baudrate of 115200";
-          sComm.delay(2000);
+//sComm.delay(2000);
           if ok <> 0 then
             strm.print("Check the serial port and try again");
           else
@@ -536,13 +564,17 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
             sComm.delay(3000) "Delay for 3 seconds";
             digital_out := sComm.cmd_digital_out(1, 11, 0) "This turns off the red Led";
           end if;
-          c_ok := sComm.close_serial(1) "To close the connection safely";
+//strm.print(String(time));
+          if time == 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 10));
         end led_blue_red;
 
         model led_blink "This will turn on and turn off the user LED for every second for 10 times"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
           Integer digital_out(fixed = false);
@@ -552,48 +584,51 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
           if ok <> 0 then
             strm.print("Check the serial port and try again");
           else
-            for i in 1:10 loop
-              digital_out := sComm.cmd_digital_out(1, 13, 0) "This will turn off the LED";
-              sComm.delay(500) "Delay for 0.5 seconds";
-              digital_out := sComm.cmd_digital_out(1, 13, 1) "This turns the Led";
-              sComm.delay(500) "Delay for 0.5 seconds";
-            end for;
+            digital_out := sComm.cmd_digital_out(1, 13, 0) "This will turn off the LED";
+            sComm.delay(500) "Delay for 0.5 seconds";
+            digital_out := sComm.cmd_digital_out(1, 13, 1) "This turns the Led";
+            sComm.delay(500) "Delay for 0.5 seconds";
           end if;
-          c_ok := sComm.close_serial(1) "To close the connection safely";
+          if time == 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 10));
         end led_blink;
 
         model led_green_blink "This will turn on and turn off the green LED for every second for 5 times"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
           Integer digital_out(fixed = false);
           Integer c_ok(fixed = false);
         algorithm
           ok := sComm.open_serial(1, 0, 115200) "At port 0 with baudrate of 115200";
-          sComm.delay(1000);
-          if ok <> 0 then
-            strm.print("Check the serial port and try again");
-          else
-            for i in 1:5 loop
-              digital_out := sComm.cmd_digital_out(1, 10, 0) "This will turn off the green LED";
-              sComm.delay(1000) "Delay for 1 second";
-              digital_out := sComm.cmd_digital_out(1, 10, 1) "This turns the green Led";
-              sComm.delay(1000) "Delay for 1 second";
-            end for;
+//sComm.delay(1000);
+//if ok <> 0 then
+//strm.print("Check the serial port and try again");
+//else
+          digital_out := sComm.cmd_digital_out(1, 10, 0) "This will turn off the green LED";
+          sComm.delay(1000) "Delay for 1 second";
+          digital_out := sComm.cmd_digital_out(1, 10, 1) "This turns the green Led";
+          sComm.delay(1000) "Delay for 1 second";
+//end if;
+          strm.print(String(time));
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
           end if;
-          c_ok := sComm.close_serial(1) "To close the connection safely";
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 2));
         end led_green_blink;
       end led;
 
       package push
         extends Modelica.Icons.ExamplesPackage;
 
-        model led_push_button
+        model led_push_button "Conrolling LED with PushButton"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
           Integer digital_in(fixed = false);
@@ -613,69 +648,87 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
               end if;
             end for;
           end if;
-          c_ok := sComm.close_serial(1) "To close the connection safely";
+//strm.print(String(time));
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 10));
         end led_push_button;
 
-        model push_button_status
+        model push_button_status "Checking Status of PushButton"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
           Integer digital_in(fixed = false);
           Integer c_ok(fixed = false);
         algorithm
-          ok := sComm.open_serial(1, 0, 115200);
-// At port 0 with baudrate of 115200
+          ok := sComm.open_serial(1, 0, 115200) "At port 0 with baudrate of 115200";
           if ok <> 0 then
             strm.print("Unable to open serial port, please check");
           else
-            for i in 1:1000 loop
-              digital_in := sComm.cmd_digital_in(1, 12);
-            end for;
+            digital_in := sComm.cmd_digital_in(1, 12);
+            if digital_in == 0 then
+              digital_out := sComm.cmd_digital_out(1, 9, 0) "This will turn OFF the blue LED";
+              strm.print("LOW");
+            else
+              digital_out := sComm.cmd_digital_out(1, 9, 1) "This will turn ON the blue LED";
+              strm.print("HIGH");
+            end if;
           end if;
+//for i in 1:1000 loop
+//end for;
+          sComm.delay(500);
 //sComm.cmd_arduino_meter(digital_in);
-          c_ok := sComm.close_serial(1);
-// To close the connection safely
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 1));
         end push_button_status;
       end push;
 
       package ldr
         extends Modelica.Icons.ExamplesPackage;
 
-        model ldr_led
+        model ldr_led "LED indicating light sensor readings"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
           Integer analog_in(fixed = false);
           Integer digital_out(fixed = false);
-          //Integer c_ok(fixed = false);
+          Integer c_ok(fixed = false);
         algorithm
           ok := sComm.open_serial(1, 0, 115200) "At port 0 with baudrate of 115200";
-//sComm.delay(1000);
+          sComm.delay(500);
           if ok <> 0 then
             strm.print("Unable to open serial port, please check");
           else
-            for i in 1:500 loop
-              analog_in := sComm.cmd_analog_in(1, 5) "read analog pin 5 (ldr)";
-              if analog_in < 300 then
-                digital_out := sComm.cmd_digital_out(1, 9, 1) "Turn ON LED";
-              else
-                digital_out := sComm.cmd_digital_out(1, 9, 0) "Turn OFF LED";
-              end if;
-            end for;
+            analog_in := sComm.cmd_analog_in(1, 5) "read analog pin 5 (ldr)";
+            if analog_in < 300 then
+              digital_out := sComm.cmd_digital_out(1, 9, 1) "Turn ON LED";
+            else
+              digital_out := sComm.cmd_digital_out(1, 9, 0) "Turn OFF LED";
+            end if;
+            strm.print(String(time));
+            sComm.delay(500);
           end if;
+//for i in 1:500 loop
+//end for;
 //Run for 500 iterations
 //Setting Threshold value of 300
-//c_ok := sComm.close_serial(1) "To close the connection safely";
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 1));
         end ldr_led;
 
-        model ldr_read
+        model ldr_read "Lumino"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
           Integer analog_in(fixed = false);
@@ -685,14 +738,16 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
           if ok <> 0 then
             strm.print("Unable to open serial port, please check");
           else
-            for i in 1:20 loop
-              analog_in := sComm.cmd_analog_in(1, 5) "read analog pin 5 (ldr)";
-              sComm.delay(500);
-            end for;
+            analog_in := sComm.cmd_analog_in(1, 5) "read analog pin 5 (ldr)";
+            strm.print("LDR Readings at time " + String(time) + " : " + String(analog_in));
+            sComm.delay(500);
           end if;
-//Run for 20 iterations
-          c_ok := sComm.close_serial(1);
-// To close the connection safely
+//Run for 10 iterations
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 1));
         end ldr_read;
       end ldr;
 
@@ -701,49 +756,52 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
 
         model pot_threshold
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
           Integer analog_in(fixed = false);
           Integer digital_out(fixed = false);
-          //Integer c_ok(fixed = false);
+          Integer c_ok(fixed = false);
         algorithm
           ok := sComm.open_serial(1, 0, 115200) "At port 0 with baudrate of 115200";
           if ok <> 0 then
             strm.print("Unable to open serial port, please check");
           else
-            for i in 1:10 loop
-              analog_in := sComm.cmd_analog_in(1, 2) "read analog pin 2";
-              if analog_in >= 0 and analog_in < 320 then
-                digital_out := sComm.cmd_digital_out(1, 11, 1) "Turn ON LED";
-                sComm.delay(1000);
-                digital_out := sComm.cmd_digital_out(1, 11, 0) "Turn OFF LED";
-              elseif analog_in >= 320 and analog_in <= 900 then
-                digital_out := sComm.cmd_digital_out(1, 10, 1) "Turn ON LED";
-                sComm.delay(1000);
-                digital_out := sComm.cmd_digital_out(1, 10, 0) "Turn OFF LED";
-              elseif analog_in > 900 and analog_in <= 1023 then
-                digital_out := sComm.cmd_digital_out(1, 9, 1) "Turn ON LED";
-                sComm.delay(1000);
-                digital_out := sComm.cmd_digital_out(1, 9, 0) "Turn OFF LED";
-              end if;
-            end for;
+            analog_in := sComm.cmd_analog_in(1, 2) "read analog pin 2";
+            strm.print("Potentiometer Readings:" + String(analog_in));
+            if analog_in >= 0 and analog_in < 320 then
+              digital_out := sComm.cmd_digital_out(1, 11, 1) "Turn ON LED";
+              sComm.delay(1000);
+              digital_out := sComm.cmd_digital_out(1, 11, 0) "Turn OFF LED";
+            elseif analog_in >= 320 and analog_in <= 900 then
+              digital_out := sComm.cmd_digital_out(1, 10, 1) "Turn ON LED";
+              sComm.delay(1000);
+              digital_out := sComm.cmd_digital_out(1, 10, 0) "Turn OFF LED";
+            elseif analog_in > 900 and analog_in <= 1023 then
+              digital_out := sComm.cmd_digital_out(1, 9, 1) "Turn ON LED";
+              sComm.delay(1000);
+              digital_out := sComm.cmd_digital_out(1, 9, 0) "Turn OFF LED";
+            end if;
           end if;
+//for i in 1:10 loop
+//end for;
 //Run for 10 iterations
 //Threshold 1
 //Threshold 2
-//c_ok := sComm.close_serial(1) "To close the connection safely";
+          if time == 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 5, Tolerance = 1e-6, Interval = 5));
         end pot_threshold;
       end pot;
 
       package thermistor
         extends Modelica.Icons.ExamplesPackage;
 
-        model therm_buzzer
+        model therm_buzzer "Sound buzzer depending on thermistor readings"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
           Integer analog_in(fixed = false);
@@ -754,25 +812,28 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
           if ok <> 0 then
             strm.print("Unable to open serial port, please check");
           else
-            for i in 1:500 loop
-              analog_in := sComm.cmd_analog_in(1, 4) "read analog pin 4";
-              if analog_in > 500 then
-                digital_out := sComm.cmd_digital_out(1, 3, 1) "Turn ON Buzzer";
-              else
-                digital_out := sComm.cmd_digital_out(1, 3, 0) "Turn OFF Buzzer";
-              end if;
-              sComm.delay(500);
-            end for;
+            analog_in := sComm.cmd_analog_in(1, 4) "read analog pin 4";
+            if analog_in > 500 then
+              digital_out := sComm.cmd_digital_out(1, 3, 1) "Turn ON Buzzer";
+            else
+              digital_out := sComm.cmd_digital_out(1, 3, 0) "Turn OFF Buzzer";
+            end if;
+            sComm.delay(500);
           end if;
+//for i in 1:500 loop
+//end for;
 //Run for 500 iterations
 //Setting Threshold value of 500
-          c_ok := sComm.close_serial(1) "To close the connection safely";
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 1));
         end therm_buzzer;
 
-        model therm_read
+        model therm_read "Thermistor Readings"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
           Integer analog_in(fixed = false);
@@ -782,26 +843,30 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
           if ok <> 0 then
             strm.print("Unable to open serial port, please check");
           else
-            for i in 1:20 loop
-              analog_in := sComm.cmd_analog_in(1, 4) "read analog pin 5 (ldr)";
-              sComm.delay(500);
-            end for;
+            analog_in := sComm.cmd_analog_in(1, 4) "read analog pin 5 (ldr)";
+            strm.print("Thermistor Readings at time " + String(time) + " : " + String(analog_in));
+            sComm.delay(500);
           end if;
+//for i in 1:20 loop
+//end for;
 //Run for 20 iterations
-          c_ok := sComm.close_serial(1) "To close the connection safely";
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 20, Tolerance = 1e-6, Interval = 1));
         end therm_read;
       end thermistor;
 
       package dcmotor
         extends Modelica.Icons.ExamplesPackage;
 
-        model dcmotor_clock
+        model dcmotor_clock "Rotate DC Motor clockwise"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
-          //Integer c_ok(fixed = false);
+          Integer c_ok(fixed = false);
         algorithm
           ok := sComm.open_serial(1, 0, 115200) "COM port is 0 and baud rate is 115200";
           if ok <> 0 then
@@ -813,18 +878,21 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
             sComm.delay(3000) "This is allowed to continue for 3 seconds";
             sComm.cmd_dcmotor_release(1, 1) "Motor 1 is released";
           end if;
-//c_ok := sComm.close_serial(1) "To close the connection safely";
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 10));
         end dcmotor_clock;
 
-        model dcmotor_both
+        model dcmotor_both "Rotate DC Motor in both directions"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
-          //Integer c_ok(fixed = false);
+          Integer c_ok(fixed = false);
         algorithm
-          ok := open_serial(1, 0, 115200) "COM port is 0 and baud rate is 115200";
+          ok := sComm.open_serial(1, 0, 115200) "COM port is 0 and baud rate is 115200";
           if ok <> 0 then
             strm.print("Unable to open serial port, please check");
           else
@@ -836,46 +904,52 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
             sComm.cmd_dcmotor_release(1, 1) "Motor 1 is released";
           end if;
 //sComm.delay(5000);
-//c_ok := sComm.close_serial(1) "To close the connection safely";
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 10));
         end dcmotor_both;
 
-        model dcmotor_loop
+        model dcmotor_loop "Rotate DC Motor in both directions in a loop"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
-          //Integer c_ok(fixed = false);
+          Integer c_ok(fixed = false);
         algorithm
-          ok := open_serial(1, 0, 115200) "COM port is 0 and baud rate is 115200";
+          ok := sComm.open_serial(1, 0, 115200) "COM port is 0 and baud rate is 115200";
           if ok <> 0 then
             strm.print("Unable to open serial port, please check");
           else
             sComm.cmd_dcmotor_setup(1, 3, 1, 9, 10) "Setup DC motor of type 3 (L293D), motor 1, pins 9 and 10";
-            for i in 1:4 loop
-              sComm.cmd_dcmotor_run(1, 1, 100) "Motor 1 runs at PWM 100";
-              sComm.delay(2000) "for 3 seconds";
-              sComm.cmd_dcmotor_run(1, 1, 0) "Halt the motor";
-              sComm.delay(2000) "for 2 seconds";
-              sComm.cmd_dcmotor_run(1, 1, -100) "Run it at PWM 100 in reverse direction";
-              sComm.delay(2000) "for 2 seconds";
-            end for;
+            sComm.cmd_dcmotor_run(1, 1, 100) "Motor 1 runs at PWM 100";
+            sComm.delay(2000) "for 3 seconds";
+            sComm.cmd_dcmotor_run(1, 1, 0) "Halt the motor";
+            sComm.delay(2000) "for 2 seconds";
+            sComm.cmd_dcmotor_run(1, 1, -100) "Run it at PWM 100 in reverse direction";
+            sComm.delay(2000) "for 2 seconds";
             sComm.cmd_dcmotor_release(1, 1) "Motor 1 is released";
           end if;
-//c_ok := sComm.close_serial(1) "To close the connection safely";
+//for i in 1:4 loop
+//end for;
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 2));
         end dcmotor_loop;
       end dcmotor;
 
       package servo
         extends Modelica.Icons.ExamplesPackage;
 
-        model servo_init
+        model servo_init "Rotate Servo Motor "
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
-          //Integer c_ok(fixed = false);
+          Integer c_ok(fixed = false);
         algorithm
           ok := sComm.open_serial(1, 0, 115200) "COM port is 0 and baud rate is 115200";
           if ok <> 0 then
@@ -885,19 +959,23 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
             sComm.cmd_servo_move(1, 1, 30) "tell servo to rotate by 30 degrees";
             sComm.delay(3000);
           end if;
-//c_ok := sComm.close_serial(1) "To close the connection safely";
+//sComm.cmd_servo_detach(1,1);
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 5, Tolerance = 1e-6, Interval = 5));
         end servo_init;
 
-        model servo_loop
+        model servo_loop "Rotate servo motor by 20 degrees 10 times"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
-          //Integer c_ok(fixed = false);
+          Integer c_ok(fixed = false);
           Integer angle(fixed = true);
         algorithm
-          ok := open_serial(1, 0, 115200) "COM port is 0 and baud rate is 115200";
+          ok := sComm.open_serial(1, 0, 115200) "COM port is 0 and baud rate is 115200";
           if ok <> 0 then
             strm.print("Check the serial port and try again");
           else
@@ -910,19 +988,21 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
             end for;
             sComm.cmd_servo_detach(1, 1) "Detach the motor";
           end if;
-//c_ok := sComm.close_serial(1);
-// To close the connection safely
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 5, Tolerance = 1e-6, Interval = 5));
         end servo_loop;
 
         model servo_reverse
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
-          //Integer c_ok(fixed = false);
+          Integer c_ok(fixed = false);
         algorithm
-          ok := open_serial(1, 0, 115200) "COM port is 0 and baud rate is 115200";
+          ok := sComm.open_serial(1, 0, 115200) "COM port is 0 and baud rate is 115200";
           if ok <> 0 then
             strm.print("Check the serial port and try again");
           else
@@ -934,34 +1014,42 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
             sComm.cmd_servo_detach(1, 1) "Detach the motor";
             sComm.delay(1000);
           end if;
-//c_ok := sComm.close_serial(1) "To close the connection safely";
+          if time >= 10 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 5, Tolerance = 1e-6, Interval = 5));
         end servo_reverse;
 
-        model servo_pot
+        model servo_pot "Control Servo Motor using Potentiometer"
           extends Modelica.Icons.Example;
-          import sComm = Arduino.SerialCommunication;
-          import Exn = Modelica.Exceptions;
+          import sComm = Arduino.SerialCommunication.Functions;
           import strm = Modelica.Utilities.Streams;
           Integer ok(fixed = false);
-          //Integer c_ok(fixed = false);
+          Integer c_ok(fixed = false);
           Integer analog_in(fixed = false);
         algorithm
-          ok := open_serial(1, 0, 115200) "COM port is 0 and baud rate is 115200";
+          ok := sComm.open_serial(1, 0, 115200) "COM port is 0 and baud rate is 115200";
           if ok <> 0 then
             strm.print("Check the serial port and try again");
           else
             sComm.cmd_servo_attach(1, 1) "Attach the motor to pin 9";
             sComm.delay(2000);
-            for i in 1:5000 loop
-              analog_in := sComm.cmd_analog_in(1, 2) "Read potentiometer value";
-              sComm.cmd_servo_move(1, 1, analog_in) "Command the servo motor";
-              sComm.delay(500) "sleep for 500 milliseconds";
-            end for;
+            analog_in := sComm.cmd_analog_in(1, 2) "Read potentiometer value";
+            analog_in := sComm.math_floor(analog_in * (180 / 1023)) "Scale Potentiometer value to 0-180";
+            sComm.cmd_servo_move(1, 1, analog_in) "Command the servo motor";
+            sComm.delay(5000) "sleep for 500 milliseconds";
             sComm.cmd_servo_detach(1, 1) "Detach the motor";
           end if;
+//for i in 1:5000 loop
+//end for;
 //5,000 itterations
-//analog_in := sComm.mfloor(analog_in * (180 / 1023)) "Scale Potentiometer value to 0-180";
-//c_ok := sComm.close_serial(1) "To close the connection safely";
+          strm.print("Potentiometer Reading at time" + String(time) + " : " + String(analog_in));
+          if time >= 5 then
+            c_ok := sComm.close_serial(1) "To close the connection safely";
+          end if;
+          annotation(
+            experiment(StartTime = 0, StopTime = 5, Tolerance = 1e-6, Interval = 5));
         end servo_pot;
       end servo;
 
@@ -1056,7 +1144,7 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
 
         model MDD_led_blue ""
           extends Modelica.Icons.Example;
-          inner Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.Microcontroller mcu(desiredPeriod = 0.01, platform = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Platform.ATmega328P) annotation(
+          inner Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.Microcontroller mcu(desiredPeriod = 0.01, platform = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Platform.ATmega16) annotation(
             Placement(visible = true, transformation(origin = {-40, 40}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.SynchronizeRealtime synchronizeRealtime1(timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
             Placement(visible = true, transformation(origin = {39, 41}, extent = {{-17, -17}, {17, 17}}, rotation = 0)));
@@ -1163,9 +1251,9 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
             Placement(visible = true, transformation(origin = {16, -26}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
           Modelica.Blocks.Sources.BooleanExpression booleanExpression1(y = true) annotation(
             Placement(visible = true, transformation(origin = {-20, 8}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Modelica.Blocks.Sources.BooleanExpression booleanExpression2(y = false) annotation(
+          Modelica.Blocks.Sources.BooleanExpression booleanExpression2(y = true) annotation(
             Placement(visible = true, transformation(origin = {-18, -62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.DigitalReadBoolean digitalReadBoolean1(pin = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Pin.'4', port = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Port.D) annotation(
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.DigitalReadBoolean digitalReadBoolean1(pin = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Pin.'4', port = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Port.B) annotation(
             Placement(visible = true, transformation(origin = {-60, -26}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
         equation
           connect(logicalSwitch1.y, digitalWriteBoolean1.u) annotation(
@@ -1400,13 +1488,13 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
             Placement(visible = true, transformation(origin = {-40, 40}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.SynchronizeRealtime synchronizeRealtime1(timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
             Placement(visible = true, transformation(origin = {39, 41}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
-          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.A}) annotation(
-            Placement(visible = true, transformation(origin = {43, -23}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
-          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = if time < 1 then 100 else 0) annotation(
-            Placement(visible = true, transformation(origin = {-39, -23}, extent = {{-15, -11}, {15, 11}}, rotation = 0)));
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.B}) annotation(
+            Placement(visible = true, transformation(origin = {51, -3}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
+          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = if time < 1 then 255 else 0) annotation(
+            Placement(visible = true, transformation(origin = {-40, -3}, extent = {{-16, -13}, {16, 13}}, rotation = 0)));
         equation
-          connect(integerExpression1.y, pwm.u[1]) annotation(
-            Line(points = {{-22, -23}, {20, -23}}, color = {255, 127, 0}));
+          connect(pwm.u[1], integerExpression1.y) annotation(
+            Line(points = {{28, -3}, {-22, -3}}, color = {255, 127, 0}, thickness = 0.5));
         end MDD_dcmotor_clock;
 
         model MDD_dcmotor_both
@@ -1417,9 +1505,15 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
             Placement(visible = true, transformation(origin = {56, 60}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.A}) annotation(
             Placement(visible = true, transformation(origin = {54, 1.77636e-15}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
-          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = if mod(time, 1) >= 0.5 then 100 else -100) annotation(
+          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = if mod(time, 1) >= 0.5 then 100 else 0) annotation(
             Placement(visible = true, transformation(origin = {-41, 3.55271e-15}, extent = {{-23, -20}, {23, 20}}, rotation = 0)));
+          Modelica.Blocks.Sources.IntegerExpression integerExpression2(y = if mod(time, 1) < 0.5 then 100 else 0) annotation(
+            Placement(visible = true, transformation(origin = {-39, -48}, extent = {{-23, -20}, {23, 20}}, rotation = 0)));
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm1(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.B}) annotation(
+            Placement(visible = true, transformation(origin = {54, -48}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
         equation
+          connect(integerExpression2.y, pwm1.u[1]) annotation(
+            Line(points = {{-14, -48}, {28, -48}, {28, -48}, {30, -48}}, color = {255, 127, 0}));
           connect(integerExpression1.y, pwm.u[1]) annotation(
             Line(points = {{-16, 0}, {28, 0}, {28, 0}, {30, 0}}, color = {255, 127, 0}));
         end MDD_dcmotor_both;
@@ -1431,28 +1525,18 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.SynchronizeRealtime synchronizeRealtime1(timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
             Placement(visible = true, transformation(origin = {40, 60}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.A}) annotation(
-            Placement(visible = true, transformation(origin = {64, -44}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
-          Modelica.Blocks.Math.Add3 add31(k1 = 1, k2 = -1, k3 = 1) annotation(
-            Placement(visible = true, transformation(origin = {-18, -44}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Modelica.Blocks.Sources.RealExpression realExpression1(y = if time <= 1 then 100 else 0) annotation(
-            Placement(visible = true, transformation(origin = {-70, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Modelica.Blocks.Sources.RealExpression realExpression2(y = if time <= 1.4 and time > 1 then 100 else 0) annotation(
-            Placement(visible = true, transformation(origin = {-70, -44}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Modelica.Blocks.Sources.RealExpression realExpression3(y = if time > 1.4 then 100 else 0) annotation(
-            Placement(visible = true, transformation(origin = {-70, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Modelica.Blocks.Math.RealToInteger realToInteger1 annotation(
-            Placement(visible = true, transformation(origin = {14, -44}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+            Placement(visible = true, transformation(origin = {44, 16}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm1(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.B}) annotation(
+            Placement(visible = true, transformation(origin = {44, -30}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
+          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = if time < 0.6 then 100 else 0) annotation(
+            Placement(visible = true, transformation(origin = {-53, 16}, extent = {{-17, -16}, {17, 16}}, rotation = 0)));
+          Modelica.Blocks.Sources.IntegerExpression integerExpression2(y = if time >= 0.6 then 100 else 0) annotation(
+            Placement(visible = true, transformation(origin = {-52, -30}, extent = {{-16, -14}, {16, 14}}, rotation = 0)));
         equation
-          connect(realToInteger1.y, pwm.u[1]) annotation(
-            Line(points = {{26, -44}, {38, -44}, {38, -44}, {40, -44}, {40, -44}}, color = {255, 127, 0}));
-          connect(add31.y, realToInteger1.u) annotation(
-            Line(points = {{-6, -44}, {2, -44}, {2, -44}, {2, -44}}, color = {0, 0, 127}));
-          connect(realExpression3.y, add31.u3) annotation(
-            Line(points = {{-58, -70}, {-40, -70}, {-40, -52}, {-30, -52}, {-30, -52}}, color = {0, 0, 127}));
-          connect(realExpression2.y, add31.u2) annotation(
-            Line(points = {{-58, -44}, {-30, -44}, {-30, -44}, {-30, -44}}, color = {0, 0, 127}));
-          connect(realExpression1.y, add31.u1) annotation(
-            Line(points = {{-58, -20}, {-38, -20}, {-38, -36}, {-30, -36}, {-30, -36}}, color = {0, 0, 127}));
+          connect(integerExpression2.y, pwm1.u[1]) annotation(
+            Line(points = {{-34, -30}, {24, -30}}, color = {255, 127, 0}));
+          connect(integerExpression1.y, pwm.u[1]) annotation(
+            Line(points = {{-34, 16}, {24, 16}}, color = {255, 127, 0}));
         end MDD_dcmotor_loop;
       end MDD_dcmotor;
 
@@ -1465,13 +1549,13 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
             Placement(visible = true, transformation(origin = {-40, 40}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.SynchronizeRealtime synchronizeRealtime1(timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
             Placement(visible = true, transformation(origin = {61, 41}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
-          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.SystemClock, timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.A}) annotation(
-            Placement(visible = true, transformation(origin = {33, -9}, extent = {{-25, -25}, {25, 25}}, rotation = 0)));
-          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = 180) annotation(
-            Placement(visible = true, transformation(origin = {-39, -9}, extent = {{-15, -15}, {15, 15}}, rotation = 0)));
+          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = if time < 0.2 then 30 else 0) annotation(
+            Placement(visible = true, transformation(origin = {-39, -7}, extent = {{-15, -15}, {15, 15}}, rotation = 0)));
+          Arduino.SerialCommunication.Blocks.Servo Servo(prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', servo_no = Arduino.SerialCommunication.Types.Servo_no.'1', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1) annotation(
+            Placement(visible = true, transformation(origin = {36, -8}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
         equation
-          connect(integerExpression1.y, pwm.u[1]) annotation(
-            Line(points = {{-22, -8}, {0, -8}, {0, -10}, {2, -10}}, color = {255, 127, 0}));
+          connect(integerExpression1.y, Servo.u) annotation(
+            Line(points = {{-22.5, -7}, {14, -7}, {14, -8}}, color = {255, 127, 0}));
         end MDD_servo_init;
 
         model MDD_servo_loop
@@ -1519,27 +1603,19 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
           extends Modelica.Icons.Example;
           inner Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.Microcontroller mcu(desiredPeriod = 0.01, platform = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Platform.ATmega328P) annotation(
             Placement(visible = true, transformation(origin = {-40, 60}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
-          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.ADC adc(analogPort = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.AnalogPort.A2, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.AnalogPrescaler.'1/128', voltageReference = 1024, voltageReferenceSelect = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.VRefSelect.Internal) annotation(
-            Placement(visible = true, transformation(origin = {-82, -22}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
-          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.SystemClock, timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.A}) annotation(
-            Placement(visible = true, transformation(origin = {70, -22}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.SynchronizeRealtime synchronizeRealtime1(timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
             Placement(visible = true, transformation(origin = {39, 61}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
-          Modelica.Blocks.Discrete.ZeroOrderHold zeroOrderHold1(samplePeriod = 1, startTime = 0) annotation(
-            Placement(visible = true, transformation(origin = {-14, -22}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.ADC adc(analogPort = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.AnalogPort.A2, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.AnalogPrescaler.'1/128', voltageReference = 1023, voltageReferenceSelect = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.VRefSelect.Internal) annotation(
+            Placement(visible = true, transformation(origin = {-52, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.A}) annotation(
+            Placement(visible = true, transformation(origin = {52, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
           Modelica.Blocks.Math.RealToInteger realToInteger1 annotation(
-            Placement(visible = true, transformation(origin = {20, -22}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Modelica.Blocks.Discrete.Sampler sampler1(samplePeriod = 1, startTime = 0) annotation(
-            Placement(visible = true, transformation(origin = {-42, -22}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+            Placement(visible = true, transformation(origin = {-4, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
         equation
-          connect(sampler1.y, zeroOrderHold1.u) annotation(
-            Line(points = {{-30, -22}, {-26, -22}, {-26, -22}, {-26, -22}}, color = {0, 0, 127}));
-          connect(adc.y, sampler1.u) annotation(
-            Line(points = {{-62, -22}, {-54, -22}, {-54, -22}, {-54, -22}}, color = {0, 0, 127}));
           connect(realToInteger1.y, pwm.u[1]) annotation(
-            Line(points = {{32, -22}, {50, -22}, {50, -22}, {50, -22}}, color = {255, 127, 0}));
-          connect(zeroOrderHold1.y, realToInteger1.u) annotation(
-            Line(points = {{-2, -22}, {8, -22}, {8, -22}, {8, -22}}, color = {0, 0, 127}));
+            Line(points = {{8, -10}, {40, -10}, {40, -10}, {40, -10}}, color = {255, 127, 0}));
+          connect(adc.y, realToInteger1.u) annotation(
+            Line(points = {{-40, -10}, {-16, -10}, {-16, -10}, {-16, -10}}, color = {0, 0, 127}));
         end MDD_servo_pot;
 
         model MDD_servo_reverse
@@ -1550,7 +1626,7 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
             Placement(visible = true, transformation(origin = {55, 61}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.SystemClock, timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.A}) annotation(
             Placement(visible = true, transformation(origin = {44, 8.88178e-16}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
-          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = if time < 1 then 90 else 45) annotation(
+          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = 90) annotation(
             Placement(visible = true, transformation(origin = {-44, 0}, extent = {{-22, -22}, {22, 22}}, rotation = 0)));
         equation
           connect(integerExpression1.y, pwm.u[1]) annotation(
@@ -1581,79 +1657,31 @@ Arduino.SerialCommunication.<b>ieeesingle2num</b>(hexa);
       model Servo
         extends Modelica.Blocks.Icons.Block;
         import Modelica_DeviceDrivers.EmbeddedTargets.AVR;
-        import sComm = Arduino.SerialCommunication;
-        outer Microcontroller mcu;
+        import sComm = Arduino.SerialCommunication.Functions;
+        outer Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.Microcontroller mcu;
         constant AVR.Types.TimerSelect timer annotation(
           Dialog(enable = true, tab = "General", group = "Constants"));
         constant AVR.Types.TimerPrescaler prescaler "Pre-scaler for the clock." annotation(
           Dialog(enable = true, tab = "General", group = "Constants"));
-        constant sComm.types.Servo_no servo_no annotation(
+        constant sComm.Types.Servo_no servo_no annotation(
           Dialog(enable = true, tab = "General", group = "Constants"));
+        Modelica.Blocks.Interfaces.IntegerInput u "Connector of Servo input signals (integer 0..255)" annotation(
+          Placement(transformation(extent = {{-140, -20}, {-100, 20}})));
       protected
         AVR.Functions.Timers.Timer clock = AVR.Functions.Timers.Timer(timer, prescaler, clearTimerOnMatch = true);
-        sComm.Functions.Servo.Init servo = sComm.Functions.Servo.Init(servo_no);
+        sComm.Functions.MDD_Servo.Init servo = sComm.Functions.MDD_Servo.Init(servo_no);
       algorithm
-        sComm.Function.Servo.Move(servo_no, u);
+        sComm.Functions.MDD_Servo.Move(servo, u);
         annotation(
           defaultComponentName = "Servo",
           Icon(graphics = {Text(extent = {{-95, -95}, {95, 95}}, textString = "Servo %servo_no", fontName = "Arial")}));
       end Servo;
     end Blocks;
 
-    package Functions
-      extends Modelica.Icons.Package;
-      import Modelica;
-
-      package Servo
-        extends Modelica.Icons.Package;
-
-        class Init
-          extends ExternalObject;
-
-          function constructor "Return device handle"
-            extends .Modelica.Icons.Function;
-            import Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions;
-            import Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types;
-            import sComm = Arduino.SerialCommunication;
-            import Arduino.SerialCommunication.Functions.Servo;
-            input sComm.types.Servo_no servo_no;
-            output Init servo;
-          
-            external "C" servo = MDD_avr_servo_initialize(servo_no) annotation(
-              Library = "/home/souradip/OpenModelica/MDD_servo.o",
-              LibraryDirectory = "/home/souradip/OpenModelica",
-              Include = "#include \"/home/souradip/OpenModelica/headers/MDDAVRServo.h\"");
-          end constructor;
-
-          function destructor ""
-            extends .Modelica.Icons.Function;
-            input Init servo "Device handle";
-          
-            external "C" MDD_avr_servo_finalize(servo_no) annotation(
-              Library = "/home/souradip/OpenModelica/MDD_servo.o",
-              LibraryDirectory = "/home/souradip/OpenModelica",
-              Include = "#include \"/home/souradip/OpenModelica/headers/MDDAVRServo.h\"");
-          end destructor;
-        end Init;
-
-        function Move
-          extends Modelica.Icons.Function;
-          import sComm = Arduino.SerialCommunication;
-          input sComm.Functions.Servo.Init servo;
-          input Integer value;
-        
-          external "C" MDD_avr_servo_move(servo, value) annotation(
-            Library = "/home/souradip/OpenModelica/MDD_servo.o",
-            LibraryDirectory = "/home/souradip/OpenModelica",
-            Include = "#include \"/home/souradip/Openmodelica/headers/MDDAVRServo.h\"");
-        end Move;
-      end Servo;
-    end Functions;
-
-    type types
+    type Types
       extends Modelica.Icons.TypesPackage;
       type Servo_no = enumeration('1' "Servo1", '2' "Servo2") "Servo ID";
-    end types;
+    end Types;
     annotation(
       Documentation(info = "<html>
 <h4>Description</h4>
