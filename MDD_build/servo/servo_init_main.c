@@ -38,7 +38,7 @@ typedef struct servo_init_fmi2Component_s {
 
 servo_init_fmi2Component servo_init_component = {
   .fmi2IntegerVars = {
-    0 /*integerExpression1._y*/,
+    30 /*Servo._u*/,
   },
   .fmi2RealParameter = {
     0.01 /*synchronizeRealtime1._actualInterval*/,
@@ -54,30 +54,30 @@ static inline double om_mod(double x, double y)
 
 #include "MDDAVRTimer.h"
 #include "MDDAVRRealTime.h"
-#include "MDDAVRAnalog.h"
+#include "/home/souradip/OpenModelica/Resources/Include/MDDAVRServo.h"
 
-static inline void Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(fmi2Component comp, void* om_pwm, fmi2Integer om_value);
-static inline void* Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_Init_constructor(fmi2Component comp, void* om_timer, fmi2Integer om_pin, fmi2Integer om_initialValue, fmi2Boolean om_inverted);
-static inline void Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_Init_destructor(fmi2Component comp, void* om_pwm);
+static inline void Arduino_SerialCommunication_Functions_MDD__Servo_Move(fmi2Component comp, void* om_servo, fmi2Integer om_value);
+static inline void* Arduino_SerialCommunication_Functions_MDD__Servo_Init_constructor(fmi2Component comp, fmi2Integer om_servo_no);
+static inline void Arduino_SerialCommunication_Functions_MDD__Servo_Init_destructor(fmi2Component comp, fmi2Integer om_servo_no);
 static inline void Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(fmi2Component comp, void* om_rt);
 static inline void* Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_Init_constructor(fmi2Component comp, void* om_timer, fmi2Integer om_timerValue, fmi2Integer om_numTimerInterruptsPerCycle);
 static inline void Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_Init_destructor(fmi2Component comp, void* om_rt);
 static inline void* Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(fmi2Component comp, fmi2Integer om_timerSelect, fmi2Integer om_clockSelect, fmi2Boolean om_clearTimerOnMatch);
 static inline void Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_destructor(fmi2Component comp, void* om_timer);
 
-static inline void Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(fmi2Component comp, void* om_pwm, fmi2Integer om_value)
+static inline void Arduino_SerialCommunication_Functions_MDD__Servo_Move(fmi2Component comp, void* om_servo, fmi2Integer om_value)
 {
-  MDD_avr_pwm_set(om_pwm, om_value);
+  MDD_avr_servo_move(om_servo, om_value);
 }
-static inline void* Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_Init_constructor(fmi2Component comp, void* om_timer, fmi2Integer om_pin, fmi2Integer om_initialValue, fmi2Boolean om_inverted)
+static inline void* Arduino_SerialCommunication_Functions_MDD__Servo_Init_constructor(fmi2Component comp, fmi2Integer om_servo_no)
 {
-  void* om_pwm;
-  om_pwm = MDD_avr_pwm_init(om_timer, om_pin, om_initialValue, om_inverted);
-  return om_pwm;
+  void* om_servo;
+  om_servo = MDD_avr_servo_initialize(om_servo_no);
+  return om_servo;
 }
-static inline void Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_Init_destructor(fmi2Component comp, void* om_pwm)
+static inline void Arduino_SerialCommunication_Functions_MDD__Servo_Init_destructor(fmi2Component comp, fmi2Integer om_servo_no)
 {
-  MDD_avr_pwm_close(om_pwm);
+  MDD_avr_servo_finalize(om_servo_no);
 }
 static inline void Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(fmi2Component comp, void* om_rt)
 {
@@ -120,8 +120,8 @@ fmi2Status servo_init_fmi2SetupExperiment(fmi2Component comp, fmi2Boolean tolera
 
 fmi2Status servo_init_fmi2EnterInitializationMode(fmi2Component comp)
 {
-  comp->extObjs[0] /* pwm._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 2, 1, fmi2True);
-  comp->extObjs[1] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_Init_constructor(comp, comp->extObjs[0] /* pwm._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 1, 0, fmi2False);
+  comp->extObjs[1] /* Servo._servo EXTOBJ: Arduino.SerialCommunication.Functions.MDD_Servo.Init */ = Arduino_SerialCommunication_Functions_MDD__Servo_Init_constructor(comp, 1);
+  comp->extObjs[0] /* Servo._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 2, 7, fmi2True);
   comp->extObjs[2] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 1, 4, fmi2False);
   comp->extObjs[3] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_Init_constructor(comp, comp->extObjs[2] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 249, 10);
   return fmi2OK;
@@ -138,7 +138,7 @@ static fmi2Status servo_init_functionODE(fmi2Component comp)
 
 static fmi2Status servo_init_functionOutputs(fmi2Component comp)
 {
-  Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[3] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[1] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, 180);
+  comp->fmi2IntegerVars[0] /* Servo._u DISCRETE */ = ((comp->currentTime)<(0.2)) ? (30) : (0); /* equation 3 */Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[3] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Arduino_SerialCommunication_Functions_MDD__Servo_Move(comp, comp->extObjs[1] /* Servo._servo EXTOBJ: Arduino.SerialCommunication.Functions.MDD_Servo.Init */, comp->fmi2IntegerVars[0] /* Servo._u DISCRETE */);
 }
 
 fmi2Status servo_init_fmi2DoStep(fmi2Component comp, fmi2Real currentCommunicationPoint, fmi2Real communicationStepSize, fmi2Boolean noSetFMUStatePriorToCurrentPoint)

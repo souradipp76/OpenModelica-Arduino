@@ -9,5 +9,3 @@ getErrorString();
 
 translateModel(Arduino.SerialCommunication.MDD_Examples.MDD_servo.MDD_servo_init, fileNamePrefix="servo_init");
 getErrorString();
-
-setPlotSilent(false);

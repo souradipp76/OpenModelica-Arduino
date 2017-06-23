@@ -31,37 +31,21 @@ void ModelicaFormatMessage(const char *fmt, ...)
 
 typedef struct servo_pot_fmi2Component_s {
   fmi2Real currentTime;
-  fmi2Real fmi2RealVars[4];
+  fmi2Real fmi2RealVars[1];
   fmi2Integer fmi2IntegerVars[1];
-  fmi2Boolean fmi2BooleanVars[6];
-  fmi2Real fmi2RealParameter[5];
+  fmi2Real fmi2RealParameter[1];
   void* extObjs[5];
 } servo_pot_fmi2Component;
 
 servo_pot_fmi2Component servo_pot_component = {
   .fmi2RealVars = {
     0.0 /*adc._y*/,
-    0.0 /*realToInteger1._u*/,
-    0.0 /*sampler1._y*/,
-    0.0 /*zeroOrderHold1._ySample*/,
   },
   .fmi2IntegerVars = {
     0 /*pwm._u[1]*/,
   },
-  .fmi2BooleanVars = {
-    fmi2True /*$whenCondition1*/,
-    fmi2True /*$whenCondition2*/,
-    fmi2False /*sampler1._firstTrigger*/,
-    fmi2True /*sampler1._sampleTrigger*/,
-    fmi2False /*zeroOrderHold1._firstTrigger*/,
-    fmi2True /*zeroOrderHold1._sampleTrigger*/,
-  },
   .fmi2RealParameter = {
-    1.0 /*sampler1._samplePeriod*/,
-    0.0 /*sampler1._startTime*/,
     0.01 /*synchronizeRealtime1._actualInterval*/,
-    1.0 /*zeroOrderHold1._samplePeriod*/,
-    0.0 /*zeroOrderHold1._startTime*/,
   },
 };
 
@@ -161,11 +145,11 @@ fmi2Status servo_pot_fmi2SetupExperiment(fmi2Component comp, fmi2Boolean toleran
 
 fmi2Status servo_pot_fmi2EnterInitializationMode(fmi2Component comp)
 {
-  comp->extObjs[3] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 1, 4, fmi2False);
-  comp->extObjs[4] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_Init_constructor(comp, comp->extObjs[3] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 249, 10);
-  comp->extObjs[1] /* pwm._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 2, 1, fmi2True);
+  comp->extObjs[1] /* pwm._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 2, 7, fmi2True);
   comp->extObjs[2] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_Init_constructor(comp, comp->extObjs[1] /* pwm._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 1, 0, fmi2False);
   comp->extObjs[0] /* adc._analog EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Analog.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Analog_Init_constructor(comp, 7, 4);
+  comp->extObjs[3] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 1, 4, fmi2False);
+  comp->extObjs[4] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_Init_constructor(comp, comp->extObjs[3] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 249, 10);
   return fmi2OK;
 }
 
@@ -180,33 +164,12 @@ static fmi2Status servo_pot_functionODE(fmi2Component comp)
 
 static fmi2Status servo_pot_functionOutputs(fmi2Component comp)
 {
-  comp->fmi2BooleanVars[1] /* $whenCondition2 DISCRETE */ = 
-  #error "[CodegenEmbeddedC.tpl:490:28-490:28] daeExpCallBuiltin: Not supported: sample(2, sampler1.startTime, sampler1.samplePeriod)"
-  ; /* equation 16 */
-  
-  #error "[CodegenEmbeddedC.tpl:346:14-346:14] Unsupported equation: ..."
-
-  comp->fmi2BooleanVars[3] /* sampler1._sampleTrigger DISCRETE */ = comp->fmi2BooleanVars[1] /* $whenCondition2 DISCRETE */; /* equation 18 */
-  comp->fmi2BooleanVars[0] /* $whenCondition1 DISCRETE */ = 
-  #error "[CodegenEmbeddedC.tpl:490:28-490:28] daeExpCallBuiltin: Not supported: sample(1, zeroOrderHold1.startTime, zeroOrderHold1.samplePeriod)"
-  ; /* equation 19 */
-  
-  #error "[CodegenEmbeddedC.tpl:346:14-346:14] Unsupported equation: ..."
-
-  comp->fmi2BooleanVars[5] /* zeroOrderHold1._sampleTrigger DISCRETE */ = comp->fmi2BooleanVars[0] /* $whenCondition1 DISCRETE */; /* equation 21 */
-  comp->fmi2RealVars[1] /* realToInteger1._u variable */ = comp->fmi2RealVars[3] /* zeroOrderHold1._ySample DISCRETE */; /* equation 22 */
-  comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */ = ((comp->fmi2RealVars[1] /* realToInteger1._u variable */)>(0.0)) ? (((int)
-  #error "[CodegenEmbeddedC.tpl:490:28-490:28] daeExpCallBuiltin: Not supported: floor(0.5 + realToInteger1.u, 1)"
+  comp->fmi2RealVars[0] /* adc._y variable */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Analog_read__voltage(comp, 3, 1023.0, 10); /* equation 4 */
+  comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */ = ((comp->fmi2RealVars[0] /* adc._y variable */)>(0.0)) ? (((int)
+  #error "[CodegenEmbeddedC.tpl:490:28-490:28] daeExpCallBuiltin: Not supported: floor(0.5 + adc.y, 1)"
   )) : (((int)
-  #error "[CodegenEmbeddedC.tpl:490:28-490:28] daeExpCallBuiltin: Not supported: ceil(-0.5 + realToInteger1.u, 3)"
-  )); /* equation 23 */
-  comp->fmi2RealVars[0] /* adc._y variable */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Analog_read__voltage(comp, 3, 1024.0, 10); /* equation 24 */
-  
-  #error "[CodegenEmbeddedC.tpl:346:14-346:14] Unsupported equation: ..."
-
-  
-  #error "[CodegenEmbeddedC.tpl:346:14-346:14] Unsupported equation: ..."
-  Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[4] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[2] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */);
+  #error "[CodegenEmbeddedC.tpl:490:28-490:28] daeExpCallBuiltin: Not supported: ceil(-0.5 + adc.y, 3)"
+  )); /* equation 5 */Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[4] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[2] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */);
 }
 
 fmi2Status servo_pot_fmi2DoStep(fmi2Component comp, fmi2Real currentCommunicationPoint, fmi2Real communicationStepSize, fmi2Boolean noSetFMUStatePriorToCurrentPoint)
