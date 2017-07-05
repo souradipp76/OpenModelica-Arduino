@@ -1,6 +1,4 @@
 # OpenModelica-Arduino
-Interfacing Arduino with Openmodelica
-
 OpenModelica-Arduino
 
 Free library for interfacing Arduino using Modelica and Modelica_DeviceDrivers models in Linux. There is support for serial port.
