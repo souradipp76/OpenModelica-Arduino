@@ -42,7 +42,7 @@ dcmotor_loop_fmi2Component dcmotor_loop_component = {
     0 /*pwm1._u[1]*/,
   },
   .fmi2RealParameter = {
-    0.01 /*synchronizeRealtime1._actualInterval*/,
+    0.002 /*synchronizeRealtime1._actualInterval*/,
   },
 };
 
@@ -126,7 +126,7 @@ fmi2Status dcmotor_loop_fmi2EnterInitializationMode(fmi2Component comp)
   comp->extObjs[0] /* pwm._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 2, 7, fmi2True);
   comp->extObjs[1] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_Init_constructor(comp, comp->extObjs[0] /* pwm._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 1, 0, fmi2False);
   comp->extObjs[4] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 1, 4, fmi2False);
-  comp->extObjs[5] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_Init_constructor(comp, comp->extObjs[4] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 249, 10);
+  comp->extObjs[5] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_Init_constructor(comp, comp->extObjs[4] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 249, 2);
   return fmi2OK;
 }
 
@@ -141,9 +141,9 @@ static fmi2Status dcmotor_loop_functionODE(fmi2Component comp)
 
 static fmi2Status dcmotor_loop_functionOutputs(fmi2Component comp)
 {
-  comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */ = ((comp->currentTime)<(0.6)) ? (100) : (0); /* equation 4 */
+  comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */ = ((comp->currentTime)<(3.0)) ? (100) : (0); /* equation 4 */
   comp->fmi2IntegerVars[1] /* pwm1._u[1] DISCRETE */ = (
-  #error "[CodegenEmbeddedC.tpl:460:14-460:14] daeExp: Not supporting time >= 0.6 and time <= 1.4"
+  #error "[CodegenEmbeddedC.tpl:460:14-460:14] daeExp: Not supporting time >= 3.0 and time < 5.0"
   ) ? (100) : (0); /* equation 5 */Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[5] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[1] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[3] /* pwm1._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, comp->fmi2IntegerVars[1] /* pwm1._u[1] DISCRETE */);
 }
 
