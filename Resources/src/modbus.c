@@ -22,7 +22,7 @@ int ascii_c(char c)
 double read_val(int addr_byte)
 {	
 	int h=open_serial(1,0,9600);
-	char array1[20];
+	char array1[20]="";
 	if(addr_byte==86)
     {	
     	char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(86),ascii_n(00),ascii_n(2),ascii_n(39),ascii_n(15)};
@@ -123,7 +123,7 @@ double read_val(int addr_byte)
 void read_voltage()
 {
 	int h=open_serial(1,0,9600);
-	char acc[10];
+	char acc[10]="";
     char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(86),ascii_n(00),ascii_n(2),ascii_n(39),ascii_n(15)};
     int j;
     for (j = 0; j < 8; ++j)
@@ -200,7 +200,7 @@ void read_voltage()
 void read_current()
 {
 	int h=open_serial(1,0,9600);
-	char acc[100];
+	char acc[10]="";
     char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(88),ascii_n(00),ascii_n(2),ascii_n(70),ascii_n(204)};
     int j;
     for (j = 0; j < 8; ++j)
@@ -276,7 +276,7 @@ void read_current()
 void read_active_power()
 {
 	int h=open_serial(1,0,9600);
-	char acc[100];
+	char acc[10]="";
     char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(78),ascii_n(00),ascii_n(2),ascii_n(167),ascii_n(8)};
     int j;
     for (j = 0; j < 8; ++j)
