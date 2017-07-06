@@ -23,40 +23,33 @@ double read_val(int addr_byte)
 {	
 	int h=open_serial(1,0,9600);
 	char array1[20]="";
+	char* arr;
 	if(addr_byte==86)
     {	
-    	char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(86),ascii_n(00),ascii_n(2),ascii_n(39),ascii_n(15)};
-    	int j;
-    	for (j = 0; j < 8; ++j)
-    	{
-    		strcat(array1,arr[j]);
-    	}
+    	char code[9]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(86),ascii_n(00),ascii_n(2),ascii_n(39),ascii_n(15),'\0'};
+    	arr = code;
     	printf("Voltage(in V)=");
 	}
     else if(addr_byte==88)
     {	
-    	char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(88),ascii_n(00),ascii_n(2),ascii_n(70),ascii_n(204)};
-    	int j;
-    	for (j = 0; j < 8; ++j)
-    	{
-    		strcat(array1,arr[j]);
-    	}
+    	char code[9]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(88),ascii_n(00),ascii_n(2),ascii_n(70),ascii_n(204),'\0'};
+    	arr = code;
     	printf("Current(in A)=");
 	}
     else if(addr_byte==78)
     {	
-    	char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(78),ascii_n(00),ascii_n(2),ascii_n(167),ascii_n(8)};
-    	int j;
-    	for (j = 0; j < 8; ++j)
-    	{
-    		strcat(array1,arr[j]);
-    	}
+    	char code[9]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(78),ascii_n(00),ascii_n(2),ascii_n(167),ascii_n(8),'\0'};
+    	arr = code;
     	printf("Active Power(in W)=");
 	}
 
-	int wr=write_serial(1,array1,8);
-	char buf[12];
-	int rd=read_serial(1,buf,11);
+	int x,wr,rd;
+    char buf[12];
+    for(x=0;x<5;x++)
+    {
+    	wr=write_serial(1,arr,8);
+		rd = read_serial(1,buf,11);
+	}
 	int b1=0,b2=0,b3=0,b4=0;
 	int myresult[12];
 	int i;
@@ -73,7 +66,7 @@ double read_val(int addr_byte)
 	char* v1=dec2hex(a1);
 	if (b1)
 	{
-		strcat("0",v1);
+		v1=strcat("0",v1);
 	}
 
 	int a2=myresult[6];
@@ -84,7 +77,7 @@ double read_val(int addr_byte)
 	char* v2=dec2hex(a2);
 	if (b2)
 	{
-		strcat("0",v2);
+		v2=strcat("0",v2);
 	}
 
 	int a3=myresult[7];
@@ -95,7 +88,7 @@ double read_val(int addr_byte)
 	char* v3=dec2hex(a3);
 	if (b3)
 	{
-		strcat("0",v3);
+		v3=strcat("0",v3);
 	}
 
 	int a4=myresult[8];
@@ -106,7 +99,7 @@ double read_val(int addr_byte)
 	char* v4=dec2hex(a4);
 	if (b4)
 	{
-		strcat("0",v4);
+		v4=strcat("0",v4);
 	}
 	char* a5[4]={v3,v4,v1,v2};
 	char a6[100];
@@ -124,16 +117,15 @@ void read_voltage()
 {
 	int h=open_serial(1,0,9600);
 	char acc[10]="";
-    char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(86),ascii_n(00),ascii_n(2),ascii_n(39),ascii_n(15)};
-    int j;
-    for (j = 0; j < 8; ++j)
-    {
-    	strcat(acc,arr[j]);
-    }
+    char arr[9]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(86),ascii_n(00),ascii_n(2),ascii_n(39),ascii_n(15),'\0'};
     //printf("%s\n",acc );
-    int wr=write_serial(1,arr,8);
-	char buf[12];
-	int rd = read_serial(1,buf,11);
+    int x,wr,rd;
+    char buf[12];
+    for(x=0;x<5;x++)
+    {
+    	wr=write_serial(1,arr,8);
+		rd = read_serial(1,buf,11);
+	}
 	int b1=0,b2=0,b3=0,b4=0;
 	int myresult[12];
 	int i;
@@ -150,7 +142,7 @@ void read_voltage()
 	char* v1=dec2hex(a1);
 	if (b1)
 	{
-		strcat("0",v1);
+		v1=strcat("0",v1);
 	}
 
 	int a2=myresult[6];
@@ -161,7 +153,7 @@ void read_voltage()
 	char* v2=dec2hex(a2);
 	if (b2)
 	{
-		strcat("0",v2);
+		v2=strcat("0",v2);
 	}
 
 	int a3=myresult[7];
@@ -172,7 +164,7 @@ void read_voltage()
 	char* v3=dec2hex(a3);
 	if (b3)
 	{
-		strcat("0",v3);
+		v3=strcat("0",v3);
 	}
 
 	int a4=myresult[8];
@@ -183,7 +175,7 @@ void read_voltage()
 	char* v4=dec2hex(a4);
 	if (b4)
 	{
-		strcat("0",v4);
+		v4=strcat("0",v4);
 	}
 	char* a5[4]={v3,v4,v1,v2};
 	char a6[100];
@@ -201,16 +193,15 @@ void read_current()
 {
 	int h=open_serial(1,0,9600);
 	char acc[10]="";
-    char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(88),ascii_n(00),ascii_n(2),ascii_n(70),ascii_n(204)};
-    int j;
-    for (j = 0; j < 8; ++j)
-    {
-    	strcat(acc,arr[j]);
-    }
+    char arr[9]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(88),ascii_n(00),ascii_n(2),ascii_n(70),ascii_n(204),'\0'};
         //printf("%s\n",acc );
-    int wr=write_serial(1,arr,8);
-	char buf[12];
-	int rd=read_serial(1,buf,11);
+    int x,wr,rd;
+    char buf[12];
+    for(x=0;x<5;x++)
+    {
+    	wr=write_serial(1,arr,8);
+		rd = read_serial(1,buf,11);
+	}
 	int b1=0,b2=0,b3=0,b4=0;
 	int myresult[12];
 	int i;
@@ -227,7 +218,7 @@ void read_current()
 	char* v1=dec2hex(a1);
 	if (b1)
 	{
-		strcat("0",v1);
+		v1=strcat("0",v1);
 	}
 
 	int a2=myresult[6];
@@ -238,7 +229,7 @@ void read_current()
 	char* v2=dec2hex(a2);
 	if (b2)
 	{
-		strcat("0",v2);
+		v2=strcat("0",v2);
 	}
 
 	int a3=myresult[7];
@@ -249,7 +240,7 @@ void read_current()
 	char* v3=dec2hex(a3);
 	if (b3)
 	{
-		strcat("0",v3);
+		v3=strcat("0",v3);
 	}
 
 	int a4=myresult[8];
@@ -260,7 +251,7 @@ void read_current()
 	char* v4=dec2hex(a4);
 	if (b4)
 	{
-		strcat("0",v4);
+		v4=strcat("0",v4);
 	}
 	char* a5[4]={v3,v4,v1,v2};
 	char a6[100];
@@ -276,17 +267,15 @@ void read_current()
 void read_active_power()
 {
 	int h=open_serial(1,0,9600);
-	char acc[10]="";
-    char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(78),ascii_n(00),ascii_n(2),ascii_n(167),ascii_n(8)};
-    int j;
-    for (j = 0; j < 8; ++j)
-    {
-    	strcat(acc,arr[j]);
-    }
+    char arr[9]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(78),ascii_n(00),ascii_n(2),ascii_n(167),ascii_n(8),'\0'};
         //printf("%s\n",acc );
-    int wr=write_serial(1,arr,8);
-	char buf[12];
-	int rd=read_serial(1,buf,11);
+    int x,wr,rd;
+    char buf[12];
+    for(x=0;x<5;x++)
+    {
+    	wr=write_serial(1,arr,8);
+		rd = read_serial(1,buf,11);
+	}
 	int b1=0,b2=0,b3=0,b4=0;
 	int myresult[12];
 	int i;
@@ -303,7 +292,7 @@ void read_active_power()
 	char* v1=dec2hex(a1);
 	if (b1)
 	{
-		strcat("0",v1);
+		v1=strcat("0",v1);
 	}
 
 	int a2=myresult[6];
@@ -314,7 +303,7 @@ void read_active_power()
 	char* v2=dec2hex(a2);
 	if (b2)
 	{
-		strcat("0",v2);
+		v2=strcat("0",v2);
 	}
 
 	int a3=myresult[7];
@@ -325,7 +314,7 @@ void read_active_power()
 	char* v3=dec2hex(a3);
 	if (b3)
 	{
-		strcat("0",v3);
+		v3=strcat("0",v3);
 	}
 
 	int a4=myresult[8];
@@ -336,7 +325,7 @@ void read_active_power()
 	char* v4=dec2hex(a4);
 	if (b4)
 	{
-		strcat("0",v4);
+		v4=strcat("0",v4);
 	}
 	char* a5[4]={v3,v4,v1,v2};
 	char a6[100];
