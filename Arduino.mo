@@ -1167,9 +1167,23 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           Integer c_ok(fixed = false);
         algorithm
           when initial() then
+            ok:=sComm.open_serial(1,0,9600);
             modbus.read_voltage();
+            modbus.read_current();
+            modbus.read_active_power();
+            c_ok:=sComm.close_serial(1);
           end when;
         end modbus_test;
+
+
+
+
+
+
+
+
+
+
       end modbus;
     end Examples;
 
