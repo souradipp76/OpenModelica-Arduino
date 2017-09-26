@@ -35,10 +35,10 @@ uint16_t cmd_analog_in_volt(int h,int pin_no)
     {
         temp[i]=(uint8_t)(values[i]);
     }
-    printf("%u %u\n",temp[0],temp[1]);
+    //printf("%u %u\n",temp[0],temp[1]);
     uint16_t result=(uint16_t)(256*temp[1]+temp[0]);
     result/=1023;
-    printf("%u\n",result);
+    //printf("%u\n",result);
     return result;
 }
 
@@ -50,14 +50,14 @@ int cmd_analog_out_volt(int h,int pin_no,double val)
     else if(val < 0)
         val = 0;
     val=val*255/5;
-    printf("%f\n",val);
+    //printf("%f\n",val);
     char code_sent[10];
     strcpy(code_sent,"W");
     sprintf(v1,"%c",pin_no+48);
     sprintf(v2,"%c",abs(ceil(val)));
     strcat(code_sent,v1);
     strcat(code_sent,v2);
-    printf("%s\n",code_sent);
+    //printf("%s\n",code_sent);
     return write_serial(h,code_sent,3);
 
 }

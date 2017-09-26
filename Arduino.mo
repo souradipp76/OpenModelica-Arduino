@@ -526,6 +526,7 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
 
 
 
+
         model led_blue_delay "Turn on Blue LED for a period of 2 seconds"
           extends Modelica.Icons.Example;
           import sComm = Arduino.SerialCommunication.Functions;
@@ -758,6 +759,40 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
             experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 0.02));
         end ldr_led;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         model ldr_read "Reading light intensity using ldr"
           extends Modelica.Icons.Example;
           import sComm = Arduino.SerialCommunication.Functions;
@@ -802,7 +837,7 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
         algorithm
           when initial() then
             ok := sComm.open_serial(1, 0, 115200) "At port 0 with baudrate of 115200";
-            sComm.delay(2000);
+            sComm.delay(1000);
           end when;
           if ok <> 0 then
             strm.print("Unable to open serial port, please check");
@@ -832,8 +867,34 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
 //Threshold 1
 //Threshold 2
           annotation(
-            experiment(StartTime = 0, StopTime = 100, Tolerance = 1e-6, Interval = 1));
+            experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 1));
         end pot_threshold;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1099,6 +1160,10 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
 
 
 
+
+
+
+
         model servo_reverse
           extends Modelica.Icons.Example;
           import sComm = Arduino.SerialCommunication.Functions;
@@ -1162,6 +1227,7 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           annotation(
             experiment(StartTime = 0, StopTime = 5, Tolerance = 1e-6, Interval = 5));
         end servo_pot;
+
       end servo;
 
       package modbus
