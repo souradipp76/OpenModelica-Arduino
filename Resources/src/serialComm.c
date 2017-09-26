@@ -21,7 +21,7 @@ int set_interface_attribs (int fd, int speed, int parity)
 
         switch(speed) {
         case 115200: posix_baudrate = B115200; break;
-        default: return -1;
+        //default: return -1;
         }
         cfsetospeed (&tty, posix_baudrate);
         cfsetispeed (&tty, posix_baudrate);
@@ -82,7 +82,7 @@ int open_serial(int handle,int port, int baudrate){
                 case 5: portname = "//dev/ttyACM5";break;
                 case 6: portname = "//dev/ttyACM6";break;
                 case 7: portname = "//dev/ttyACM7";break;
-                default : return 2;
+                //default : return 2;
         }
         OK = 0;
         //printf("%s\n",portname);
@@ -96,21 +96,21 @@ int open_serial(int handle,int port, int baudrate){
         }
         set_interface_attribs (fd, baudrate, 0);
         set_blocking (fd, 0);                // set no blocking
-        printf("Program running with status : %d\n",OK);
+        //printf("Program running with status : %d\n",OK);
         return OK;
 }
 
 int close_serial(int handle){
         //usleep(1000);
         close(fd);
-        printf("Program closing....\n");
+        //printf("Program closing....\n");
         return 0;
 }
 
 int write_serial(int handle, char str[],int size){
         if(write(fd, str, size)!=-1)
         {        
-                printf("serial write started.\n");
+                //printf("serial write started.\n");
                 //printf("%s\n",str );
                 //printf("%d\n",(int)str[0] );
         }
@@ -123,7 +123,7 @@ int status_serial(int handle,int nb[]){
         nb[0] = 2; 
         nb[1] = 2;
         int OK=0;
-        printf("Getting status.....\n");
+        //printf("Getting status.....\n");
         return OK;
 }
 
@@ -142,7 +142,7 @@ int read_serial(int handle,char buf[],int size){
                         //printf("%u\n",buf[i] );
                 }
                 buf[size]='\0';
-                printf("Reading has commenced..\n");
+                //printf("Reading has commenced..\n");
                 //printf("%d\n",(int)strlen(readbuf));
                 //printf("%s\n",readbuf);
                 return 0;

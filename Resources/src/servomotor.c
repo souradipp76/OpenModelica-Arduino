@@ -13,11 +13,11 @@ void cmd_servo_attach(int h,int servo_no)
 {
 	char pin[5];
 	int wr;
-	printf("init servo write");
+	printf("init servo write\n");
     if(servo_no==1)//servo 1 on pin 9
     {
     	strcpy(pin,"Sa1");
-        printf("%s\n",pin);
+        //printf("%s\n",pin);
         wr=write_serial(h,pin,3);
     }     
     else if(servo_no==2)//servo 2 on pin 10
@@ -42,7 +42,7 @@ void cmd_servo_move(int h,int servo_no,int u1)
 		sprintf(v,"%c",0);
 		strcat(pin,servo);
 		strcat(pin,v);
-        printf("%s\n",pin );
+        //printf("%s\n",pin );
           //pin="Sw"+ascii(48+servo_no)+ascii(0);
 	}
     else if(u1>180)
@@ -51,7 +51,7 @@ void cmd_servo_move(int h,int servo_no,int u1)
 		sprintf(v,"%c",180);
 		strcat(pin,servo);
 		strcat(pin,v);
-        printf("%s\n",pin );
+        //printf("%s\n",pin );
     }      //pin="Sw"+ascii(48+servo_no)+ascii(180);
     else
     {
@@ -59,7 +59,7 @@ void cmd_servo_move(int h,int servo_no,int u1)
 		sprintf(v,"%c",(uint8_t)u1);
 		strcat(pin,servo);
 		strcat(pin,v);
-        printf("%s\n",pin );
+        //printf("%s\n",pin );
     }      //pin="Sw"+ascii(48+servo_no)+ascii(uint8(u1));
     wr=write_serial(1,pin,4);
 }

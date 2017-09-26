@@ -50,7 +50,7 @@ void cmd_dcmotor_setup(int h,int driver_type,int motor_no,int pin_no_1,int pin_n
 
     }
     //    code_sent="C"+string(motor_no)+ascii(48+pin_no_1)+ascii(48+pin_no_2)+"0";   //code pour initialiser L293
-    printf("%s\n",code_sent);
+    //printf("%s\n",code_sent);
     wr=write_serial(h,code_sent,5);
 
     int stat;
@@ -84,13 +84,13 @@ void cmd_dcmotor_run(int h,int motor_no,int u1)
         val=255;
     else
         val=abs(ceil(u1));
-    printf("%d\n",val);
+    //printf("%d\n",val);
     sprintf(motor,"%c",motor_no+48);
     sprintf(v,"%c",val);
     strcat(code_sent,motor);
     strcat(code_sent,code_dir);
     strcat(code_sent,v);
-    printf("%s\n",code_sent);      
+    //printf("%s\n",code_sent);      
           //code_sent="M"+ascii(48+motor_no)+code_dir+ascii(val);
     int wr=write_serial(h,code_sent,4);
 }
@@ -106,12 +106,12 @@ void cmd_dcmotor_release(int h,int motor_no)
     strcat(code_sent,"1");
     strcat(code_sent,v);
 	//code_sent="M"+ascii(48+motor_no)+"1"+ascii(0);
-    printf("%s\n",code_sent);
+    //printf("%s\n",code_sent);
     int wr=write_serial(h,code_sent,4);
     strcpy(code_sent,"M");  
     strcat(code_sent,motor);
     strcat(code_sent,"r");
-    printf("%s\n",code_sent);
+    //printf("%s\n",code_sent);
     //code_sent="M"+ascii(48+motor_no)+"r";
     wr=write_serial(h,code_sent,3);
 }
