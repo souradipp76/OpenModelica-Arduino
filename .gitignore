@@ -2,10 +2,10 @@
 ###################
 *.com
 *.class
-*.dll
-*.exe
-*.o
-*.so
+
+# Backup Files #
+############
+*~
 
 # Packages #
 ############
@@ -35,5 +35,3 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
-
-*~
