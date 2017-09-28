@@ -23,7 +23,7 @@ if [[ "$unamestr" == 'Linux' ]]; then
 	mdd_path=($(locate Modelica_DeviceDrivers/Modelica_DeviceDrivers/Resources/Include))
 	om_path=($(locate /usr/include/omc/c))
 	port="/dev/ttyACM$1"
-	omc --simCodeTarget=ExperimentalEmbeddedC runMDD_led_push_button.mos
+	omc --simCodeTarget=ExperimentalEmbeddedC runMDD_pot_threshold.mos
 	if [ $? -ne 0 ]; then
 		exit 1
 	fi
@@ -41,21 +41,21 @@ else
 	
 	port="COM$1"
 	cd $present
-	omc --simCodeTarget=ExperimentalEmbeddedC run_led_push_button.mos
+	omc --simCodeTarget=ExperimentalEmbeddedC run_pot_threshold.mos
 	if [ $? -ne 0 ]; then
 		exit 1
 	fi
 fi
 
-avr-gcc -Os -std=c11 -ffunction-sections -fdata-sections -mmcu=atmega328p -DF_CPU=16000000UL -Wl,--gc-sections led_push_button_main.c -o led_push_button -I${mdd_path[0]} -I${path_to_om} -I${path_to_mdd} -I${om_path[0]}  
+avr-gcc -Os -std=c11 -ffunction-sections -fdata-sections -mmcu=atmega328p -DF_CPU=16000000UL -Wl,--gc-sections pot_threshold_main.c -o pot_threshold -I${mdd_path[0]} -I${path_to_om} -I${path_to_mdd} -I${om_path[0]}  
 if [ $? -ne 0 ]; then
 	exit 1
 fi
-avr-objcopy -O ihex -R .eeprom led_push_button led_push_button.hex
+avr-objcopy -O ihex -R .eeprom pot_threshold pot_threshold.hex
 if [ $? -ne 0 ]; then
 	exit 1
 fi 
-avrdude -F -V -c arduino -p ATMEGA328P -P $port -b $b_rate -U flash:w:led_push_button.hex
+avrdude -F -V -c arduino -p ATMEGA328P -P $port -b $b_rate -U flash:w:pot_threshold.hex
 if [ $? -ne 0 ]; then
 	exit 1
 fi

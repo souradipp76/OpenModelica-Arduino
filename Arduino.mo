@@ -503,7 +503,7 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           Integer c_ok(fixed = false);
         algorithm
           when initial() then
-            ok := sComm.open_serial(1, 1, 115200) "At port 0 with baudrate of 115200";
+            ok := sComm.open_serial(1, 0, 115200) "At port 0 with baudrate of 115200";
             sComm.delay(2000);
             if ok <> 0 then
               strm.print("Check the serial port and try again");
@@ -516,16 +516,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           annotation(
             experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 10));
         end led_blue;
-
-
-
-
-
-
-
-
-
-
 
         model led_blue_delay "Turn on Blue LED for a period of 2 seconds"
           extends Modelica.Icons.Example;
@@ -617,7 +607,7 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           Integer c_ok(fixed = false);
         algorithm
           when initial() then
-            ok := sComm.open_serial(1, 1, 115200) "At port 0 with baudrate of 115200";
+            ok := sComm.open_serial(1, 0, 115200) "At port 0 with baudrate of 115200";
             sComm.delay(1000);
             if ok <> 0 then
               strm.print("Check the serial port and try again");
@@ -635,11 +625,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           annotation(
             experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 10));
         end led_green_blink;
-
-
-
-
-
       end led;
 
       package push
@@ -655,7 +640,7 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           Integer c_ok(fixed = false);
         algorithm
           when initial() then
-            ok := sComm.open_serial(1, 1, 115200) "At port 0 with baudrate of 115200";
+            ok := sComm.open_serial(1, 0, 115200) "At port 0 with baudrate of 115200";
           end when;
           if ok <> 0 then
             strm.print("Unable to open serial port, please check");
@@ -678,10 +663,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           annotation(
             experiment(StartTime = 0, StopTime = 1, Tolerance = 1e-6, Interval = 0.01));
         end led_push_button;
-
-
-
-
 
         model push_button_status "Checking Status of PushButton"
           extends Modelica.Icons.Example;
@@ -759,40 +740,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
             experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 0.02));
         end ldr_led;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         model ldr_read "Reading light intensity using ldr"
           extends Modelica.Icons.Example;
           import sComm = Arduino.SerialCommunication.Functions;
@@ -869,51 +816,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           annotation(
             experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 1));
         end pot_threshold;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       end pot;
 
       package thermistor
@@ -1011,11 +913,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
             experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 10));
         end dcmotor_clock;
 
-
-
-
-
-
         model dcmotor_both "Rotate DC Motor in both directions"
           extends Modelica.Icons.Example;
           import sComm = Arduino.SerialCommunication.Functions;
@@ -1041,19 +938,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           annotation(
             experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 10));
         end dcmotor_both;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         model dcmotor_loop "Rotate DC Motor in both directions in a loop"
           extends Modelica.Icons.Example;
@@ -1083,8 +967,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           annotation(
             experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-6, Interval = 10));
         end dcmotor_loop;
-
-
       end dcmotor;
 
       package servo
@@ -1113,19 +995,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
             experiment(StartTime = 0, StopTime = 5, Tolerance = 1e-6, Interval = 5));
         end servo_init;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         model servo_loop "Rotate servo motor by 20 degrees 10 times"
           extends Modelica.Icons.Example;
           import sComm = Arduino.SerialCommunication.Functions;
@@ -1147,22 +1016,13 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
                 sComm.cmd_servo_move(1, 1, angle * i) "tell servo to rotate by 20 degrees";
                 sComm.delay(1000) "waits for a sec";
               end for;
-              //sComm.cmd_servo_detach(1, 1) "Detach the motor";
             end if;
             c_ok := sComm.close_serial(1) "To close the connection safely";
           end when;
+//sComm.cmd_servo_detach(1, 1) "Detach the motor";
           annotation(
             experiment(StartTime = 0, StopTime = 5, Tolerance = 1e-6, Interval = 5));
         end servo_loop;
-
-
-
-
-
-
-
-
-
 
         model servo_reverse
           extends Modelica.Icons.Example;
@@ -1182,18 +1042,14 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
               sComm.delay(1000) "be there for one second";
               sComm.cmd_servo_move(1, 1, 45) "Move the servo to 45 degree";
               sComm.delay(1000) "be there for one second";
-              //sComm.cmd_servo_detach(1, 1) "Detach the motor";
               sComm.delay(1000);
             end if;
             c_ok := sComm.close_serial(1) "To close the connection safely";
           end when;
+//sComm.cmd_servo_detach(1, 1) "Detach the motor";
           annotation(
             experiment(StartTime = 0, StopTime = 5, Tolerance = 1e-6, Interval = 5));
         end servo_reverse;
-
-
-
-
 
         model servo_pot "Control Servo Motor using Potentiometer"
           extends Modelica.Icons.Example;
@@ -1227,7 +1083,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           annotation(
             experiment(StartTime = 0, StopTime = 5, Tolerance = 1e-6, Interval = 5));
         end servo_pot;
-
       end servo;
 
       package modbus
@@ -1311,23 +1166,13 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           Integer c_ok(fixed = false);
         algorithm
           when initial() then
-            ok:=sComm.open_serial(1,0,9600);
+            ok := sComm.open_serial(1, 0, 9600);
             modbus.read_voltage();
             modbus.read_current();
             modbus.read_active_power();
-            c_ok:=sComm.close_serial(1);
+            c_ok := sComm.close_serial(1);
           end when;
         end modbus_test;
-
-
-
-
-
-
-
-
-
-
       end modbus;
     end Examples;
 
@@ -1902,56 +1747,43 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
 
     package Icons "Collection of icons used for library components"
       extends Modelica.Icons.IconsPackage;
-      
+
       partial package GenericICPackage "Icon with a generic IC"
-      annotation(Icon(coordinateSystem(preserveAspectRatio = true, extent = {{-100, -100}, {100, 100}}), graphics = {Bitmap(extent = {{-95, -95}, {95, 95}}, fileName = "Resources/Images/Icons/tqfp32.png", rotation = 0)}), Documentation(info = "<html>
+        annotation(
+          Icon(coordinateSystem(preserveAspectRatio = true, extent = {{-100, -100}, {100, 100}}), graphics = {Bitmap(extent = {{-95, -95}, {95, 95}}, fileName = "Resources/Images/Icons/tqfp32.png", rotation = 0)}),
+          Documentation(info = "<html>
     <p>
     This partial class is intended to design a <em>default icon for microcontrollers</em>.
     </p>
     </html>"));
-    end GenericICPackage;
+      end GenericICPackage;
 
-
-    
-    partial block GenericIC "Icon with a generic IC"
-      annotation(Icon(coordinateSystem(preserveAspectRatio = true, extent = {{-100, -100}, {100, 100}}), graphics = {Bitmap(extent = {{-95, -95}, {95, 95}}, fileName = "Resources/Images/Icons/tqfp32.png", rotation = 0)}), Documentation(info = "<html>
+      partial block GenericIC "Icon with a generic IC"
+        annotation(
+          Icon(coordinateSystem(preserveAspectRatio = true, extent = {{-100, -100}, {100, 100}}), graphics = {Bitmap(extent = {{-95, -95}, {95, 95}}, fileName = "Resources/Images/Icons/tqfp32.png", rotation = 0)}),
+          Documentation(info = "<html>
     <p>
     This partial class is intended to design a <em>default icon for microcontrollers</em>.
     </p>
     </html>"));
-    end GenericIC;
+      end GenericIC;
 
-
-    
-    partial package FunctionLayerIcon
-      "Icon for packages that represent the function layer"
-      extends Modelica.Icons.Package;
-    
-      annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}), graphics={
-            Text(
-              lineColor={128,128,128},
-              extent={{-90,-90},{90,90}},
-              textString="f"),
-            Ellipse(
-              lineColor={128,128,128},
-              extent={{-80,-80},{80,80}})}),
-    Documentation(info="<html>
+      partial package FunctionLayerIcon "Icon for packages that represent the function layer"
+        extends Modelica.Icons.Package;
+        annotation(
+          Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}), graphics = {Text(lineColor = {128, 128, 128}, extent = {{-90, -90}, {90, 90}}, textString = "f"), Ellipse(lineColor = {128, 128, 128}, extent = {{-80, -80}, {80, 80}})}),
+          Documentation(info = "<html>
     <p>This icon indicates Modelica functions.</p>
     </html>"));
-    end FunctionLayerIcon;
-
-    
-      annotation (
-        preferredView="info",
-        Documentation(
-          info="<html>
+      end FunctionLayerIcon;
+      annotation(
+        preferredView = "info",
+        Documentation(info = "<html>
     <p>
     A collection of basic icons to be used for different elements of the library.
     </p>
     </html>"));
     end Icons;
-
-
     annotation(
       Documentation(info = "<html>
 <h4>Description</h4>
@@ -1960,8 +1792,6 @@ A serial communication package for hardware interfacing.
 </p>
 </html>"));
   end SerialCommunication;
-
-
   annotation(
     uses(Modelica_DeviceDrivers(version = "1.5.0"), Modelica(version = "3.2.2")));
 end Arduino;
