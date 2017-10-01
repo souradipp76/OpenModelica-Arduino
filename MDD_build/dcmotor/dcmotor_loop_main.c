@@ -38,7 +38,7 @@ typedef struct dcmotor_loop_fmi2Component_s {
 
 dcmotor_loop_fmi2Component dcmotor_loop_component = {
   .fmi2IntegerVars = {
-    100 /*pwm._u[1]*/,
+    0 /*pwm._u[1]*/,
     0 /*pwm1._u[1]*/,
   },
   .fmi2RealParameter = {
@@ -141,10 +141,8 @@ static fmi2Status dcmotor_loop_functionODE(fmi2Component comp)
 
 static fmi2Status dcmotor_loop_functionOutputs(fmi2Component comp)
 {
-  comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */ = ((comp->currentTime)<(3.0)) ? (100) : (0); /* equation 4 */
-  comp->fmi2IntegerVars[1] /* pwm1._u[1] DISCRETE */ = (
-  #error "[CodegenEmbeddedC.tpl:460:14-460:14] daeExp: Not supporting time >= 3.0 and time < 5.0"
-  ) ? (100) : (0); /* equation 5 */Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[5] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[1] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[3] /* pwm1._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, comp->fmi2IntegerVars[1] /* pwm1._u[1] DISCRETE */);
+  comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */ = ((om_mod(comp->currentTime,6.0))<(3.0)) ? (255) : (0); /* equation 4 */
+  comp->fmi2IntegerVars[1] /* pwm1._u[1] DISCRETE */ = ((om_mod(comp->currentTime,6.0))>(3.0)) ? (255) : (0); /* equation 5 */Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[5] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[1] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[3] /* pwm1._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, comp->fmi2IntegerVars[1] /* pwm1._u[1] DISCRETE */);
 }
 
 fmi2Status dcmotor_loop_fmi2DoStep(fmi2Component comp, fmi2Real currentCommunicationPoint, fmi2Real communicationStepSize, fmi2Boolean noSetFMUStatePriorToCurrentPoint)

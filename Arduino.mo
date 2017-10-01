@@ -986,7 +986,7 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
             else
               sComm.delay(2000);
               sComm.cmd_servo_attach(1, 1) "To attach the motor to pin 9 of servo1";
-              sComm.cmd_servo_move(1, 1, 30) "tell servo to rotate by 30 degrees";
+              sComm.cmd_servo_move(1, 1, 0) "tell servo to rotate by 30 degrees";
               sComm.delay(3000);
             end if;
             c_ok := sComm.close_serial(1) "To close the connection safely";
@@ -1283,8 +1283,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           extends Modelica.Icons.Example;
           inner Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.Microcontroller mcu(desiredPeriod = 0.002, platform = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Platform.ATmega328P) annotation(
             Placement(visible = true, transformation(origin = {-38, 40}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
-          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.DigitalWriteBoolean digitalWriteBoolean1(pin = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Pin.'1', port = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Port.B) annotation(
-            Placement(visible = true, transformation(origin = {64, -26}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.SynchronizeRealtime synchronizeRealtime1(timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
             Placement(visible = true, transformation(origin = {39, 41}, extent = {{-17, -17}, {17, 17}}, rotation = 0)));
           Modelica.Blocks.Logical.LogicalSwitch logicalSwitch1 annotation(
@@ -1294,12 +1292,14 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           Modelica.Blocks.Sources.BooleanExpression booleanExpression2(y = false) annotation(
             Placement(visible = true, transformation(origin = {-18, -62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.DigitalReadBoolean digitalReadBoolean1(pin = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Pin.'4', port = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Port.B) annotation(
-            Placement(visible = true, transformation(origin = {-58, -26}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+            Placement(visible = true, transformation(origin = {-36, -26}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.DigitalWriteBoolean digitalWriteBoolean1(pin = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Pin.'1', port = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Port.B) annotation(
+            Placement(visible = true, transformation(origin = {62, -26}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
         equation
-          connect(digitalReadBoolean1.y, logicalSwitch1.u2) annotation(
-            Line(points = {{-47, -26}, {4, -26}}, color = {255, 0, 255}));
           connect(logicalSwitch1.y, digitalWriteBoolean1.u) annotation(
-            Line(points = {{28, -26}, {44, -26}, {44, -26}, {44, -26}}, color = {255, 0, 255}));
+            Line(points = {{28, -26}, {48, -26}, {48, -26}, {50, -26}}, color = {255, 0, 255}));
+          connect(digitalReadBoolean1.y, logicalSwitch1.u2) annotation(
+            Line(points = {{-24, -26}, {2, -26}, {2, -26}, {4, -26}}, color = {255, 0, 255}));
           connect(booleanExpression1.y, logicalSwitch1.u1) annotation(
             Line(points = {{-8, 8}, {-2, 8}, {-2, -18}, {4, -18}, {4, -18}}, color = {255, 0, 255}));
           connect(booleanExpression2.y, logicalSwitch1.u3) annotation(
@@ -1568,9 +1568,9 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
             Placement(visible = true, transformation(origin = {44, 16}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm1(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.B}) annotation(
             Placement(visible = true, transformation(origin = {44, -30}, extent = {{-16, -16}, {16, 16}}, rotation = 0)));
-          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = if time < 3 then 100 else 0) annotation(
+          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = if mod(time, 6) < 3 then 255 else 0) annotation(
             Placement(visible = true, transformation(origin = {-53, 16}, extent = {{-17, -16}, {17, 16}}, rotation = 0)));
-          Modelica.Blocks.Sources.IntegerExpression integerExpression2(y = if time >= 3 then 100 else 0) annotation(
+          Modelica.Blocks.Sources.IntegerExpression integerExpression2(y = if mod(time, 6) > 3 then 255 else 0) annotation(
             Placement(visible = true, transformation(origin = {-52, -30}, extent = {{-16, -14}, {16, 14}}, rotation = 0)));
         equation
           connect(integerExpression2.y, pwm1.u[1]) annotation(
@@ -1586,57 +1586,39 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
         model MDD_servo_init
           extends Modelica.Icons.Example;
           inner Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.Microcontroller mcu(desiredPeriod = 0.002, platform = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Platform.ATmega328P) annotation(
-            Placement(visible = true, transformation(origin = {-40, 40}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+            Placement(visible = true, transformation(origin = {-40, 58}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.SynchronizeRealtime synchronizeRealtime1(timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
-            Placement(visible = true, transformation(origin = {61, 41}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
+            Placement(visible = true, transformation(origin = {59, 59}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.A}) annotation(
+            Placement(visible = true, transformation(origin = {44, -6}, extent = {{-28, -28}, {28, 28}}, rotation = 0)));
           Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = 30) annotation(
-            Placement(visible = true, transformation(origin = {-39, -7}, extent = {{-15, -15}, {15, 15}}, rotation = 0)));
-          Arduino.SerialCommunication.Blocks.Servo Servo(prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', servo_no = Arduino.SerialCommunication.Types.Servo_no.'1', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1) annotation(
-            Placement(visible = true, transformation(origin = {36, -8}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
+            Placement(visible = true, transformation(origin = {-57, -6}, extent = {{-23, -18}, {23, 18}}, rotation = 0)));
         equation
-          connect(integerExpression1.y, Servo.u) annotation(
-            Line(points = {{-22.5, -7}, {14, -7}, {14, -8}}, color = {255, 127, 0}));
+          connect(integerExpression1.y, pwm.u[1]) annotation(
+            Line(points = {{-32, -6}, {10, -6}}, color = {255, 127, 0}));
         end MDD_servo_init;
 
         model MDD_servo_loop
           extends Modelica.Icons.Example;
           inner Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.Microcontroller mcu(desiredPeriod = 0.002, platform = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.Platform.ATmega328P) annotation(
             Placement(visible = true, transformation(origin = {-41, 41}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
-          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.SynchronizeRealtime synchronizeRealtime1 annotation(
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.SynchronizeRealtime synchronizeRealtime1(timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
             Placement(visible = true, transformation(origin = {39, 41}, extent = {{-17, -17}, {17, 17}}, rotation = 0)));
-          Modelica.Blocks.Math.Gain gain1(k = 20) annotation(
-            Placement(visible = true, transformation(origin = {38, -6}, extent = {{-14, -14}, {14, 14}}, rotation = 0)));
-          Modelica.Blocks.Sources.Clock clock1(offset = 0, startTime = 0) annotation(
-            Placement(visible = true, transformation(origin = {-74, 2}, extent = {{-18, -18}, {18, 18}}, rotation = 0)));
-          Modelica.Blocks.Logical.LessEqual lessEqual1 annotation(
-            Placement(visible = true, transformation(origin = {-58, -50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Modelica.Blocks.Logical.Switch switch1 annotation(
-            Placement(visible = true, transformation(origin = {-22, -6}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = 0) annotation(
-            Placement(visible = true, transformation(origin = {-30, -42}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Modelica.Blocks.Sources.IntegerExpression integerExpression2(y = 10) annotation(
-            Placement(visible = true, transformation(origin = {-84, -84}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Modelica.Blocks.Math.RealToInteger realToInteger1 annotation(
-            Placement(visible = true, transformation(origin = {4, -34}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Arduino.SerialCommunication.Blocks.Servo Servo(prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', servo_no = 1, timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
-            Placement(visible = true, transformation(origin = {80, -6}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.A}) annotation(
+            Placement(visible = true, transformation(origin = {80, -8}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+          Modelica.Blocks.MathInteger.TriggeredAdd triggeredAdd1(use_reset = false, use_set = false) annotation(
+            Placement(visible = true, transformation(origin = {10, -8}, extent = {{-6, -6}, {6, 6}}, rotation = 0)));
+          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = 10) annotation(
+            Placement(visible = true, transformation(origin = {-34, -8}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+          Modelica.Blocks.Sources.BooleanExpression booleanExpression1(y = if mod(time, 0.2) > 0.1 then true else false) annotation(
+            Placement(visible = true, transformation(origin = {-22, -32}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
         equation
-          connect(gain1.y, Servo.u) annotation(
-            Line(points = {{54, -6}, {68, -6}, {68, -6}, {68, -6}}, color = {0, 0, 127}));
-          connect(integerExpression2.y, lessEqual1.u2) annotation(
-            Line(points = {{-73, -84}, {-64, -84}, {-64, -68}, {-84, -68}, {-84, -58}, {-70, -58}}, color = {255, 127, 0}));
-          connect(realToInteger1.y, gain1.u) annotation(
-            Line(points = {{16, -34}, {16, -6}, {21, -6}}, color = {255, 127, 0}));
-          connect(clock1.y, lessEqual1.u1) annotation(
-            Line(points = {{-54, 2}, {-50, 2}, {-50, -32}, {-84, -32}, {-84, -50}, {-70, -50}, {-70, -50}}, color = {0, 0, 127}));
-          connect(clock1.y, switch1.u1) annotation(
-            Line(points = {{-54, 2}, {-34, 2}}, color = {0, 0, 127}));
-          connect(integerExpression1.y, switch1.u3) annotation(
-            Line(points = {{-18, -42}, {-16, -42}, {-16, -24}, {-40, -24}, {-40, -14}, {-34, -14}, {-34, -14}}, color = {255, 127, 0}));
-          connect(lessEqual1.y, switch1.u2) annotation(
-            Line(points = {{-46, -50}, {-44, -50}, {-44, -6}, {-34, -6}, {-34, -6}}, color = {255, 0, 255}));
-          connect(switch1.y, realToInteger1.u) annotation(
-            Line(points = {{-10, -6}, {-8, -6}, {-8, -34}, {-8, -34}}, color = {0, 0, 127}));
+          connect(booleanExpression1.y, triggeredAdd1.trigger) annotation(
+            Line(points = {{-10, -32}, {6, -32}, {6, -16}, {6, -16}}, color = {255, 0, 255}));
+          connect(integerExpression1.y, triggeredAdd1.u) annotation(
+            Line(points = {{-22, -8}, {2, -8}, {2, -8}, {2, -8}}, color = {255, 127, 0}));
+          connect(triggeredAdd1.y, pwm.u[1]) annotation(
+            Line(points = {{17, -8}, {68, -8}}, color = {255, 127, 0}));
         end MDD_servo_loop;
 
         model MDD_servo_pot
@@ -1645,17 +1627,17 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
             Placement(visible = true, transformation(origin = {-40, 60}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.SynchronizeRealtime synchronizeRealtime1(timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
             Placement(visible = true, transformation(origin = {39, 61}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
-          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.ADC adc(analogPort = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.AnalogPort.A2, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.AnalogPrescaler.'1/128', voltageReference = 1023, voltageReferenceSelect = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.VRefSelect.Internal) annotation(
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.ADC adc(analogPort = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.AnalogPort.A2, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.AnalogPrescaler.'1/128', voltageReference = 180, voltageReferenceSelect = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.VRefSelect.Internal) annotation(
             Placement(visible = true, transformation(origin = {-52, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.A}) annotation(
+            Placement(visible = true, transformation(origin = {48, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
           Modelica.Blocks.Math.RealToInteger realToInteger1 annotation(
-            Placement(visible = true, transformation(origin = {-4, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-          Blocks.Servo Servo(prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', servo_no = 1, timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
-            Placement(visible = true, transformation(origin = {60, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+            Placement(visible = true, transformation(origin = {-6, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
         equation
-          connect(realToInteger1.y, Servo.u) annotation(
-            Line(points = {{8, -10}, {48, -10}, {48, -10}, {48, -10}}, color = {255, 127, 0}));
           connect(adc.y, realToInteger1.u) annotation(
-            Line(points = {{-40, -10}, {-16, -10}, {-16, -10}, {-16, -10}}, color = {0, 0, 127}));
+            Line(points = {{-40, -10}, {-18, -10}, {-18, -10}, {-18, -10}, {-18, -10}}, color = {0, 0, 127}));
+          connect(realToInteger1.y, pwm.u[1]) annotation(
+            Line(points = {{6, -10}, {36, -10}, {36, -10}, {36, -10}}, color = {255, 127, 0}));
         end MDD_servo_pot;
 
         model MDD_servo_reverse
@@ -1664,13 +1646,13 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
             Placement(visible = true, transformation(origin = {-59, 61}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
           Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.SynchronizeRealtime synchronizeRealtime1(timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
             Placement(visible = true, transformation(origin = {55, 61}, extent = {{-19, -19}, {19, 19}}, rotation = 0)));
-          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = 90) annotation(
+          Modelica.Blocks.Sources.IntegerExpression integerExpression1(y = if time < 0.2 then 22 else 15) annotation(
             Placement(visible = true, transformation(origin = {-44, 0}, extent = {{-22, -22}, {22, 22}}, rotation = 0)));
-          Arduino.SerialCommunication.Blocks.Servo Servo(prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', servo_no = 1, timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer0) annotation(
-            Placement(visible = true, transformation(origin = {42, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+          Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.PWM pwm(fastPWM = true, initialValues = {0}, prescaler = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerPrescaler.'1/1024', timer = Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerSelect.Timer1, timerNumbers = {Modelica_DeviceDrivers.EmbeddedTargets.AVR.Types.TimerNumber.A}) annotation(
+            Placement(visible = true, transformation(origin = {44, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
         equation
-          connect(integerExpression1.y, Servo.u) annotation(
-            Line(points = {{-20, 0}, {30, 0}}, color = {255, 127, 0}));
+          connect(integerExpression1.y, pwm.u[1]) annotation(
+            Line(points = {{-20, 0}, {32, 0}}, color = {255, 127, 0}));
         end MDD_servo_reverse;
       end MDD_servo;
 
@@ -1685,8 +1667,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
             Placement(visible = true, transformation(origin = {28, 68}, extent = {{-12, -12}, {12, 12}}, rotation = 0)));
           Modelica.Blocks.MathInteger.MultiSwitch multiSwitch1(expr = {86, 88, 78}, nu = 3, use_pre_as_default = true, y_default = 0) annotation(
             Placement(visible = true, transformation(origin = {-32.6577, -10}, extent = {{-10.0019, -22}, {30.0056, 22}}, rotation = 0)));
-          Modelica.Blocks.Sources.BooleanExpression booleanExpression1 annotation(
-            Placement(visible = true, transformation(origin = {-78, -14}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
           Modelica.Blocks.Interaction.Show.RealValue realValue1 annotation(
             Placement(visible = true, transformation(origin = {60, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
           Blocks.Read_Val read_Val1 annotation(
@@ -1703,32 +1683,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
     package Blocks
       extends Modelica.Icons.Package;
 
-      model Servo
-        extends Modelica.Blocks.Icons.Block;
-        import Modelica_DeviceDrivers.EmbeddedTargets.AVR;
-        import sComm = Arduino.SerialCommunication.Functions;
-        outer Modelica_DeviceDrivers.EmbeddedTargets.AVR.Blocks.Microcontroller mcu;
-        constant AVR.Types.TimerSelect timer annotation(
-          Dialog(enable = true, tab = "General", group = "Constants"));
-        constant AVR.Types.TimerPrescaler prescaler "Pre-scaler for the clock." annotation(
-          Dialog(enable = true, tab = "General", group = "Constants"));
-        constant sComm.Types.Servo_no servo_no annotation(
-          Dialog(enable = true, tab = "General", group = "Constants"));
-        Modelica.Blocks.Interfaces.IntegerInput u "Connector of Servo input signals (integer 0..255)" annotation(
-          Placement(transformation(extent = {{-140, -20}, {-100, 20}})));
-      protected
-        AVR.Functions.Timers.Timer clock = AVR.Functions.Timers.Timer(timer, prescaler, clearTimerOnMatch = true);
-        Integer servoIndex;
-        Integer min;
-        Integer max;
-        sComm.Functions.MDD_Servo.Init servo = sComm.Functions.MDD_Servo.Init(servo_no);
-      algorithm
-        sComm.Functions.MDD_Servo.Move(servo, u);
-        annotation(
-          defaultComponentName = "Servo",
-          Icon(graphics = {Text(extent = {{-95, -95}, {95, 95}}, textString = "Servo %servo_no", fontName = "Arial")}));
-      end Servo;
-
       model Read_Val
         extends Modelica.Blocks.Interfaces.SISO;
         import Modelica_DeviceDrivers.EmbeddedTargets.AVR;
@@ -1739,11 +1693,6 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           Icon(graphics = {Text(extent = {{-95, -95}, {95, 95}}, textString = "Read_Val", fontName = "Arial")}));
       end Read_Val;
     end Blocks;
-
-    type Types
-      extends Modelica.Icons.TypesPackage;
-      type Servo_no = enumeration('1' "Servo1", '2' "Servo2") "Servo ID";
-    end Types;
 
     package Icons "Collection of icons used for library components"
       extends Modelica.Icons.IconsPackage;
