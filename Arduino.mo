@@ -122,7 +122,7 @@ Arduino.SerialCommunication.Functions.<b>status_serial</b>(handle);
         output Integer digital_w_OK;
       
         external digital_w_OK = cmd_digital_out(h, pin_no, val) annotation(
-          Library = "Digital");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
 <h4>Syntax</h4>
@@ -136,13 +136,14 @@ To map a UNO, ports 2-13 are available (0 and 1 are used for serial transmission
 </html>"));
       end cmd_digital_out;
 
+
       function cmd_digital_in "Command to read in digital signal from a connected Arduino board"
         extends Modelica.Icons.Function;
         input Integer h, pin_no;
         output Integer digital_in;
       
         external digital_in = cmd_digital_in(h, pin_no) annotation(
-          Library = "Digital");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
 <h4>Syntax</h4>
@@ -156,12 +157,13 @@ To map a UNO, ports 2-13 are available (0 and 1 are used for serial transmission
 </html>"));
       end cmd_digital_in;
 
+
       function delay "Provides delay.Suspends Openmodelica."
         extends Modelica.Icons.Function;
         input Integer t;
       
         external delay(t) annotation(
-          Library = "delay");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
   <h4>Syntax</h4>
@@ -174,13 +176,14 @@ To map a UNO, ports 2-13 are available (0 and 1 are used for serial transmission
   </html>"));
       end delay;
 
+
       function cmd_analog_in "Command to read in analog signal from a connected Arduino board"
         extends Modelica.Icons.Function;
         input Integer h, pin_no;
         output Integer val;
       
         external val = cmd_analog_in(h, pin_no) annotation(
-          Library = "Analog");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
 <h4>Syntax</h4>
@@ -193,6 +196,7 @@ Arduino.SerialCommunication.Functions.<b>cmd_analog_in</b>(handle,pin_no);
 </html>"));
       end cmd_analog_in;
 
+
       function cmd_analog_out "Command to sent out analog signal to a connected Arduino board"
         extends Modelica.Icons.Function;
         input Integer h, pin_no;
@@ -200,7 +204,7 @@ Arduino.SerialCommunication.Functions.<b>cmd_analog_in</b>(handle,pin_no);
         output Integer analog_w_OK;
       
         external analog_w_OK = cmd_analog_out(h, pin_no, val) annotation(
-          Library = "Analog");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
 <h4>Syntax</h4>
@@ -214,13 +218,14 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
 </html>"));
       end cmd_analog_out;
 
+
       function cmd_analog_in_volt "Command to read in analog signal from a connected Arduino board"
         extends Modelica.Icons.Function;
         input Integer h, pin_no;
         output Integer val;
       
         external val = cmd_analog_in_volt(h, pin_no) annotation(
-          Library = "Analogv");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
   <h4>Syntax</h4>
@@ -233,6 +238,7 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
   </html>"));
       end cmd_analog_in_volt;
 
+
       function cmd_analog_out_volt "Command to sent out analog signal to a connected Arduino board"
         extends Modelica.Icons.Function;
         input Integer h, pin_no;
@@ -240,7 +246,7 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
         output Integer analog_v_wOK;
       
         external analog_v_wOK = cmd_analog_out_volt(h, pin_no, val) annotation(
-          Library = "Analogv");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
   <h4>Syntax</h4>
@@ -253,12 +259,13 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
   </html>"));
       end cmd_analog_out_volt;
 
+
       function cmd_dcmotor_setup "Command to setup pins to control DC motor"
         extends Modelica.Icons.Function;
         input Integer handle, driver_type, motor_no, pin1, pin2;
       
         external cmd_dcmotor_setup(handle, driver_type, motor_no, pin1, pin2) annotation(
-          Library = "DCMotor");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
       <h4>Syntax</h4>
@@ -272,12 +279,13 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
       </html>"));
       end cmd_dcmotor_setup;
 
+
       function cmd_dcmotor_run "Command to run DC motor after setting up"
         extends Modelica.Icons.Function;
         input Integer handle, motor_no, val;
       
         external cmd_dcmotor_run(handle, motor_no, val) annotation(
-          Library = "DCMotor");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
     <h4>Syntax</h4>
@@ -291,12 +299,13 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
     </html>"));
       end cmd_dcmotor_run;
 
+
       function cmd_dcmotor_release "Command to release pins which have setup for DC motor"
         extends Modelica.Icons.Function;
         input Integer handle, motor_no;
       
         external cmd_dcmotor_release(handle, motor_no) annotation(
-          Library = "DCMotor");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
     <h4>Syntax</h4>
@@ -310,12 +319,13 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
     </html>"));
       end cmd_dcmotor_release;
 
+
       function cmd_servo_attach "Command to attach servo motor to Arduino"
         extends Modelica.Icons.Function;
         input Integer handle, servo_no;
       
         external cmd_servo_attach(handle, servo_no) annotation(
-          Library = "ServoMotor");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
   <h4>Syntax</h4>
@@ -330,12 +340,13 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
   </html>"));
       end cmd_servo_attach;
 
+
       function cmd_servo_move "Command to run servo motor which has been setup"
         extends Modelica.Icons.Function;
         input Integer handle, servo_no, val;
       
         external cmd_servo_move(handle, servo_no, val) annotation(
-          Library = "ServoMotor");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
   <h4>Syntax</h4>
@@ -350,12 +361,13 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
   </html>"));
       end cmd_servo_move;
 
+
       function cmd_servo_detach "Command to release the pin which has been setup for servo motor"
         extends Modelica.Icons.Function;
         input Integer handle, servo_no;
       
         external cmd_servo_attach(handle, servo_no) annotation(
-          Library = "ServoMotor");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
   <h4>Syntax</h4>
@@ -370,13 +382,14 @@ The input port accepts the value from 0 to 255 which is correspoding to the duty
   </html>"));
       end cmd_servo_detach;
 
+
       function ieeesingle2num "ieee-745 floating point converter"
         extends Modelica.Icons.Function;
         input String hexa;
         output Real y;
       
         external y = ieeesingle2num(hexa) annotation(
-          Library = "ieeesingle2num");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
 <h4>Syntax</h4>
@@ -389,13 +402,14 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
 </html>"));
       end ieeesingle2num;
 
+
       function math_floor "Floor function"
         extends Modelica.Icons.Function;
         input Real x;
         output Integer y;
       
         external y = mfloor(x) annotation(
-          Library = "floor");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
     <h4>Syntax</h4>
@@ -407,6 +421,7 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
     </p>
     </html>"));
       end math_floor;
+
 
       function getArduinoVersion "Returns the Arduino version used"
         extends Modelica.Icons.Function;
@@ -430,7 +445,7 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
         input Integer h, encoder_mode, pin_no1, pin_no2;
       
         external cmd_encoder_init(h, encoder_mode, pin_no1, pin_no2) annotation(
-          Library = "Encoder");
+          Library = "SerialComm");
         annotation(
           Documentation(info = "<html>
   <h4>Syntax</h4>
@@ -442,6 +457,7 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
   </p>
   </html>"));
       end cmd_encoder_init;
+
 
       //Incomplete
 
@@ -663,6 +679,7 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
           annotation(
             experiment(StartTime = 0, StopTime = 1, Tolerance = 1e-6, Interval = 0.01));
         end led_push_button;
+
 
         model push_button_status "Checking Status of PushButton"
           extends Modelica.Icons.Example;
