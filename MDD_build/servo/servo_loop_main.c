@@ -31,35 +31,32 @@ void ModelicaFormatMessage(const char *fmt, ...)
 
 typedef struct servo_loop_fmi2Component_s {
   fmi2Real currentTime;
-  fmi2Integer fmi2IntegerVars[3];
-  fmi2Boolean fmi2BooleanVars[3];
-  fmi2Real fmi2RealParameter[1];
-  fmi2Integer fmi2IntegerParameter[1];
-  fmi2Boolean fmi2BooleanParameter[2];
-  fmi2String fmi2StringParameter[1];
+  fmi2Real fmi2RealVars[5];
+  fmi2Integer fmi2IntegerVars[1];
+  fmi2Boolean fmi2BooleanVars[1];
+  fmi2Real fmi2RealParameter[4];
   void* extObjs[4];
 } servo_loop_fmi2Component;
 
 servo_loop_fmi2Component servo_loop_component = {
+  .fmi2RealVars = {
+    0.0 /*clock1._y*/,
+    0.0 /*gain1._u*/,
+    0.0 /*gain1._y*/,
+    0.0 /*realExpression1._y*/,
+    0.0 /*realExpression2._y*/,
+  },
   .fmi2IntegerVars = {
-    0 /*integerExpression1._y*/,
-    0 /*triggeredAdd1._local_set*/,
-    0 /*triggeredAdd1._y*/,
+    0 /*pwm._u[1]*/,
   },
   .fmi2BooleanVars = {
-    fmi2False /*$whenCondition1*/,
-    fmi2False /*booleanExpression1._y*/,
-    fmi2False /*triggeredAdd1._local_reset*/,
+    fmi2True /*less1._y*/,
   },
   .fmi2RealParameter = {
+    0.0 /*clock1._offset*/,
+    0.0 /*clock1._startTime*/,
+    5.0 /*gain1._k*/,
     0.002 /*synchronizeRealtime1._actualInterval*/,
-  },
-  .fmi2IntegerParameter = {
-    0 /*triggeredAdd1._y_start*/,
-  },
-  .fmi2BooleanParameter = {
-    fmi2False /*triggeredAdd1._use_reset*/,
-    fmi2False /*triggeredAdd1._use_set*/,
   },
 };
 
@@ -138,10 +135,10 @@ fmi2Status servo_loop_fmi2SetupExperiment(fmi2Component comp, fmi2Boolean tolera
 
 fmi2Status servo_loop_fmi2EnterInitializationMode(fmi2Component comp)
 {
-  comp->extObjs[0] /* pwm._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 2, 7, fmi2True);
-  comp->extObjs[1] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_Init_constructor(comp, comp->extObjs[0] /* pwm._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 1, 0, fmi2False);
   comp->extObjs[2] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 1, 4, fmi2False);
   comp->extObjs[3] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_Init_constructor(comp, comp->extObjs[2] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 249, 2);
+  comp->extObjs[0] /* pwm._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 2, 7, fmi2True);
+  comp->extObjs[1] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_Init_constructor(comp, comp->extObjs[0] /* pwm._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 1, 0, fmi2False);
   return fmi2OK;
 }
 
@@ -156,11 +153,11 @@ static fmi2Status servo_loop_functionODE(fmi2Component comp)
 
 static fmi2Status servo_loop_functionOutputs(fmi2Component comp)
 {
-  comp->fmi2BooleanVars[0] /* $whenCondition1 DISCRETE */ = (om_mod(comp->currentTime,0.2))>(0.1); /* equation 9 */
-  
-  #error "[CodegenEmbeddedC.tpl:346:14-346:14] Unsupported equation: ..."
-
-  comp->fmi2BooleanVars[1] /* booleanExpression1._y DISCRETE */ = comp->fmi2BooleanVars[0] /* $whenCondition1 DISCRETE */; /* equation 11 */Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[3] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[1] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, comp->fmi2IntegerVars[2] /* triggeredAdd1._y DISCRETE */);
+  comp->fmi2RealVars[0] /* clock1._y variable */ = (comp->fmi2RealParameter[0] /* clock1._offset PARAM */)+(((comp->currentTime)<(comp->fmi2RealParameter[1] /* clock1._startTime PARAM */)) ? (0.0) : ((comp->currentTime)-(comp->fmi2RealParameter[1] /* clock1._startTime PARAM */))); /* equation 9 */
+  comp->fmi2BooleanVars[0] /* less1._y DISCRETE */ = (comp->fmi2RealVars[0] /* clock1._y variable */)<(10.0); /* equation 10 */
+  comp->fmi2RealVars[1] /* gain1._u variable */ = (comp->fmi2BooleanVars[0] /* less1._y DISCRETE */) ? (comp->fmi2RealVars[0] /* clock1._y variable */) : (0.0); /* equation 11 */
+  comp->fmi2RealVars[2] /* gain1._y variable */ = (comp->fmi2RealParameter[2] /* gain1._k PARAM */)*(comp->fmi2RealVars[1] /* gain1._u variable */); /* equation 12 */
+  comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */ = ((int)comp->fmi2RealVars[2] /* gain1._y variable */); /* equation 13 */Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[3] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[1] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */);
 }
 
 fmi2Status servo_loop_fmi2DoStep(fmi2Component comp, fmi2Real currentCommunicationPoint, fmi2Real communicationStepSize, fmi2Boolean noSetFMUStatePriorToCurrentPoint)

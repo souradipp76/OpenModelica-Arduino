@@ -31,16 +31,25 @@ void ModelicaFormatMessage(const char *fmt, ...)
 
 typedef struct servo_reverse_fmi2Component_s {
   fmi2Real currentTime;
+  fmi2Real fmi2RealVars[2];
   fmi2Integer fmi2IntegerVars[1];
-  fmi2Real fmi2RealParameter[1];
+  fmi2Real fmi2RealParameter[5];
   void* extObjs[4];
 } servo_reverse_fmi2Component;
 
 servo_reverse_fmi2Component servo_reverse_component = {
+  .fmi2RealVars = {
+    90.0 /*gain1._u*/,
+    24.75 /*gain1._y*/,
+  },
   .fmi2IntegerVars = {
-    22 /*pwm._u[1]*/,
+    0 /*pwm._u[1]*/,
   },
   .fmi2RealParameter = {
+    0.275 /*gain1._k*/,
+    -45.0 /*step1._height*/,
+    90.0 /*step1._offset*/,
+    1.0 /*step1._startTime*/,
     0.01 /*synchronizeRealtime1._actualInterval*/,
   },
 };
@@ -138,7 +147,9 @@ static fmi2Status servo_reverse_functionODE(fmi2Component comp)
 
 static fmi2Status servo_reverse_functionOutputs(fmi2Component comp)
 {
-  comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */ = ((comp->currentTime)<(0.2)) ? (22) : (15); /* equation 3 */Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[3] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[1] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */);
+  comp->fmi2RealVars[0] /* gain1._u variable */ = (comp->fmi2RealParameter[2] /* step1._offset PARAM */)+(((comp->currentTime)<(comp->fmi2RealParameter[3] /* step1._startTime PARAM */)) ? (0.0) : (comp->fmi2RealParameter[1] /* step1._height PARAM */)); /* equation 5 */
+  comp->fmi2RealVars[1] /* gain1._y variable */ = (comp->fmi2RealParameter[0] /* gain1._k PARAM */)*(comp->fmi2RealVars[0] /* gain1._u variable */); /* equation 6 */
+  comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */ = ((int)comp->fmi2RealVars[1] /* gain1._y variable */); /* equation 7 */Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[3] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_PWM_set(comp, comp->extObjs[1] /* pwm._pwm[1] EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.PWM.Init */, comp->fmi2IntegerVars[0] /* pwm._u[1] DISCRETE */);
 }
 
 fmi2Status servo_reverse_fmi2DoStep(fmi2Component comp, fmi2Real currentCommunicationPoint, fmi2Real communicationStepSize, fmi2Boolean noSetFMUStatePriorToCurrentPoint)
