@@ -1641,7 +1641,7 @@ Arduino.SerialCommunication.Functions.<b>ieeesingle2num</b>(hexa);
       package MDD_modbus
         extends Modelica.Icons.ExamplesPackage;
 
-model MDD_read_val
+        model MDD_read_val
           extends Modelica.Icons.Example;
           Modelica.Blocks.MathInteger.MultiSwitch multiSwitch1(expr = {86, 88, 78}, nu = 3, use_pre_as_default = true, y_default = 0) annotation(
             Placement(visible = true, transformation(origin = {-32.6577, -10}, extent = {{-10.0019, -22}, {30.0056, 22}}, rotation = 0)));
@@ -1673,19 +1673,18 @@ model MDD_read_val
     package Blocks
       extends Modelica.Icons.Package;
 
-            block Read_Val
-              extends Modelica.Blocks.Icons.Block;
-              Modelica.Blocks.Interfaces.IntegerInput u "Connector of Integer input signal" annotation(
-                Placement(transformation(extent = {{-140, -20}, {-100, 20}})));
-              Modelica.Blocks.Interfaces.RealOutput y "Connector of Real output signal" annotation(
-                Placement(transformation(extent = {{100, -10}, {120, 10}})));
-            equation
-              y = Arduino.SerialCommunication.Examples.modbus.read_val(u);
-              annotation(
-                defaultComponentName = "Read_Val",
-                Icon(graphics = {Text(extent = {{-95, -95}, {95, 95}}, textString = "Read_Val", fontName = "Arial")}));
-            end Read_Val;
-
+      block Read_Val
+        extends Modelica.Blocks.Icons.Block;
+        Modelica.Blocks.Interfaces.IntegerInput u "Connector of Integer input signal" annotation(
+          Placement(transformation(extent = {{-140, -20}, {-100, 20}})));
+        Modelica.Blocks.Interfaces.RealOutput y "Connector of Real output signal" annotation(
+          Placement(transformation(extent = {{100, -10}, {120, 10}})));
+      equation
+        y = Arduino.SerialCommunication.Examples.modbus.read_val(u);
+        annotation(
+          defaultComponentName = "Read_Val",
+          Icon(graphics = {Text(extent = {{-95, -95}, {95, 95}}, textString = "Read_Val", fontName = "Arial")}));
+      end Read_Val;
 
       block RealToInt
         extends Modelica.Blocks.Icons.IntegerBlock;
@@ -1766,26 +1765,59 @@ A serial communication package for hardware interfacing.
         Placement(visible = true, transformation(origin = {-58, -8}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.Packager packager1(useBackwardPropagatedBufferSize = true, useBackwardSampleTimePropagation = true) annotation(
         Placement(visible = true, transformation(origin = {-26, 66}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.AddString addString1(bufferSize = 40, data = s.y, nu = 1) annotation(
+      Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.AddString addString1(bufferSize = 2, data = s.y, nu = 1) annotation(
         Placement(visible = true, transformation(origin = {-26, -6}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      Modelica_DeviceDrivers.Blocks.Communication.SerialPortSend serialPortSend1(Serial_Port = "/dev/ttyACM0", autoBufferSize = true, baud = Modelica_DeviceDrivers.Utilities.Types.SerialBaudRate.B9600) annotation(
-        Placement(visible = true, transformation(origin = {-8, -74}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      Modelica_DeviceDrivers.Blocks.OperatingSystem.SynchronizeRealtime synchronizeRealtime1 annotation(
+      Modelica_DeviceDrivers.Blocks.Communication.SerialPortSend serialPortSend1(Serial_Port = "/dev/ttyACM0", autoBufferSize = true, baud = Modelica_DeviceDrivers.Utilities.Types.SerialBaudRate.B115200) annotation(
+        Placement(visible = true, transformation(origin = {-26, -64}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
+      Modelica_DeviceDrivers.Blocks.OperatingSystem.SynchronizeRealtime synchronizeRealtime1(enableRealTimeScaling = false) annotation(
         Placement(visible = true, transformation(origin = {80, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      Modelica_DeviceDrivers.Blocks.Communication.SerialPortReceive serialPortReceive1(Serial_Port = "/dev/ttyACM0", autoBufferSize = true, baud = Modelica_DeviceDrivers.Utilities.Types.SerialBaudRate.B9600) annotation(
-        Placement(visible = true, transformation(origin = {32, 52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.GetString getString1(bufferSize = 40, nu = 1) annotation(
-        Placement(visible = true, transformation(origin = {32, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      Modelica_DeviceDrivers.Blocks.Communication.SerialPortReceive serialPortReceive1(Serial_Port = "/dev/ttyACM0", autoBufferSize = true, baud = Modelica_DeviceDrivers.Utilities.Types.SerialBaudRate.B115200) annotation(
+        Placement(visible = true, transformation(origin = {34, 52}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
+      Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.GetString getString1(bufferSize = 10, nu = 1) annotation(
+        Placement(visible = true, transformation(origin = {34, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       Modelica.Blocks.Sources.IntegerExpression integerExpression3(y = Modelica.Utilities.Strings.find(getString1.data, "ok")) annotation(
-        Placement(visible = true, transformation(origin = {60, -22}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+        Placement(visible = true, transformation(origin = {68, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.GetInteger getInteger1 annotation(
+        Placement(visible = true, transformation(origin = {34, -54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     equation
-      connect(serialPortReceive1.pkgOut, getString1.pkgIn) annotation(
-        Line(points = {{42, 52}, {50, 52}, {50, 20}, {32, 20}, {32, -10}, {32, -10}}));
+      connect(getString1.pkgOut[1], getInteger1.pkgIn) annotation(
+        Line(points = {{34, -30}, {34, -30}, {34, -44}, {34, -44}}, thickness = 0.5));
+      connect(serialPortSend1.pkgIn, addString1.pkgOut[1]) annotation(
+        Line(points = {{-26, -53}, {-26, -17}}));
+      connect(getString1.pkgIn, serialPortReceive1.pkgOut) annotation(
+        Line(points = {{34, -10}, {34, 41}}));
       connect(addString1.pkgIn, packager1.pkgOut) annotation(
         Line(points = {{-26, 4}, {-26, 4}, {-26, 56}, {-26, 56}}));
-      connect(serialPortSend1.pkgIn, addString1.pkgOut[1]) annotation(
-        Line(points = {{-18, -74}, {-26, -74}, {-26, -17}}));
     end test_MDDSerial;
+
+    model test_MDDSerial_Digital
+      extends Modelica.Icons.Example;
+      Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.Packager packager1 annotation(
+        Placement(visible = true, transformation(origin = {-50, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.AddString addString1(bufferSize = 6, data = "Da91", nu = 1) annotation(
+        Placement(visible = true, transformation(origin = {-50, 36}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.AddString addString2(bufferSize = 6, data = "Dw91", nu = 1) annotation(
+        Placement(visible = true, transformation(origin = {-50, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      Modelica_DeviceDrivers.Blocks.Communication.SerialPortSend serialPortSend1(Serial_Port = "/dev/ttyACM0", autoBufferSize = true, baud = Modelica_DeviceDrivers.Utilities.Types.SerialBaudRate.B115200) annotation(
+        Placement(visible = true, transformation(origin = {-50, -68}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
+      Modelica_DeviceDrivers.Blocks.Communication.SerialPortReceive serialPortReceive1(Serial_Port = "/dev/ttyACM0", autoBufferSize = true, baud = Modelica_DeviceDrivers.Utilities.Types.SerialBaudRate.B115200) annotation(
+        Placement(visible = true, transformation(origin = {18, 68}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
+      Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.GetInteger getInteger1 annotation(
+        Placement(visible = true, transformation(origin = {18, 2}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.GetString getString1(bufferSize = 3, nu = 1) annotation(
+        Placement(visible = true, transformation(origin = {18, 32}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    equation
+      connect(addString2.pkgOut[1], serialPortSend1.pkgIn) annotation(
+        Line(points = {{-50, -27}, {-50, -57}}, thickness = 0.5));
+      connect(addString1.pkgOut[1], addString2.pkgIn) annotation(
+        Line(points = {{-50, 26}, {-50, -5}}, thickness = 0.5));
+      connect(getString1.pkgOut[1], getInteger1.pkgIn) annotation(
+        Line(points = {{18, 22}, {18, 22}, {18, 12}, {18, 12}}, thickness = 0.5));
+      connect(serialPortReceive1.pkgOut, getString1.pkgIn) annotation(
+        Line(points = {{18, 58}, {18, 58}, {18, 42}, {18, 42}}));
+      connect(packager1.pkgOut, addString1.pkgIn) annotation(
+        Line(points = {{-50, 62}, {-50, 62}, {-50, 46}, {-50, 46}}));
+    end test_MDDSerial_Digital;
   end MDDSerial;
   annotation(
     uses(Modelica_DeviceDrivers(version = "1.5.0"), Modelica(version = "3.2.2"), Modelica_Synchronous(version = "0.92.1")));
