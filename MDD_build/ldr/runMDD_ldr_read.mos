@@ -7,5 +7,5 @@ getErrorString();
 loadFile("/home/souradip/OpenModelica/Arduino.mo");
 getErrorString();
 
-translateModel(Arduino.SerialCommunication.MDD_Examples.MDD_ldr.MDD_ldr_led, fileNamePrefix="ldr_led");
+translateModel(Arduino.SerialCommunication.MDD_Examples.MDD_ldr.MDD_ldr_read, fileNamePrefix="ldr_read");
 getErrorString();
