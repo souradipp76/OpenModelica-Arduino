@@ -35,28 +35,27 @@ long int hex2dec(char hexadecimal[])
             }
         // }
         power++;
+        }
     }
     return decimalNumber;
 }
 
-char *dec2hex(long int decimalnum)
+void dec2hex(long int decimalnum,char hexadecimalnum[])
 {
 	long quotient, remainder;
-    int j = 0;
-    char hexadecimalnum[100];
- 
+    int j = 1;
     quotient = decimalnum;
  
     while (quotient != 0)
     {
         remainder = quotient % 16;
         if (remainder < 10)
-            hexadecimalnum[j++] = 48 + remainder;
+            hexadecimalnum[j--] = 48 + remainder;
         else
-            hexadecimalnum[j++] = 55 + remainder;
+            hexadecimalnum[j--] = 55 + remainder;
         quotient = quotient / 16;
     }
-    return hexadecimalnum;
+    hexadecimalnum[2]='\0';
 }
 
 double ieeesingle2num(char hexa[])
@@ -79,9 +78,8 @@ double ieeesingle2num(char hexa[])
 	else if(e > 0)
 		y = (1+f)*pow(2,e-127);
 	 //y = (1+f).*2.^(e-127);
- 
 	else
-	y = f*pow(2,-126);
+	    y = f*pow(2,-126);
 	//y = f.*2.^-126;
 	if (s) 
 		y = -y;

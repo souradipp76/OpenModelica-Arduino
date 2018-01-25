@@ -16,7 +16,7 @@ int cmd_digital_out(int h,int pin_no,int val)
 	sprintf(temp,"%c",pin_no+48);
 	strcat(pin,temp);
 	strcat(pin,"1");
-    printf("%s",pin);
+    //printf("%s",pin);
   	wr=write_serial(h,pin,4);
   	if (val > 0.5)
     	val = 1;
@@ -27,7 +27,7 @@ int cmd_digital_out(int h,int pin_no,int val)
   	strcpy(pin,"Dw");
     strcat(pin,temp);
 	strcat(pin,v);
-    printf("%s",pin);
+    //printf("%s",pin);
   	wr=write_serial(h,pin,4);
     return wr;
 }
@@ -58,6 +58,6 @@ int cmd_digital_in(int h,int pin_no)
         char* temp;
         int wr=read_serial(h,st,1);
         value=strtod(st,&temp);
-        printf("%d\n",value);
+        //printf("%d\n",value);
         return value;
 }

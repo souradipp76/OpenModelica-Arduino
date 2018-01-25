@@ -3,7 +3,7 @@ gcc -c -Wall -fPIC filename.c
 gcc -shared -fPIC -o libfilename.so file1.o file2.o ....
 
 MDD:
-Executing Blink example within MOdelica_DeviceDrivers EmbeddedTargets Package:-
+Executing Blink example within Modelica_DeviceDrivers EmbeddedTargets Package:-
 Put the runMDDAvr.mos file in a (build) directory and execute following commands on the command line:
 
 omc --simCodeTarget=ExperimentalEmbeddedC runMDDAvr.mos

@@ -41,7 +41,7 @@ led_green_blink_fmi2Component led_green_blink_component = {
     fmi2False /*booleanExpression1._y*/,
   },
   .fmi2RealParameter = {
-    0.01 /*synchronizeRealtime1._actualInterval*/,
+    0.002 /*synchronizeRealtime1._actualInterval*/,
   },
 };
 
@@ -121,8 +121,8 @@ fmi2Status led_green_blink_fmi2SetupExperiment(fmi2Component comp, fmi2Boolean t
 fmi2Status led_green_blink_fmi2EnterInitializationMode(fmi2Component comp)
 {
   comp->extObjs[1] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Timers_Timer_constructor(comp, 1, 4, fmi2False);
-  comp->extObjs[2] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_Init_constructor(comp, comp->extObjs[1] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 249, 10);
-  comp->extObjs[0] /* digitalWriteBoolean1._digital EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Digital.InitWrite */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Digital_InitWrite_constructor(comp, 2, 3);
+  comp->extObjs[2] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_Init_constructor(comp, comp->extObjs[1] /* synchronizeRealtime1._clock EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Timers.Timer */, 249, 2);
+  comp->extObjs[0] /* digitalWriteBoolean1._digital EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Digital.InitWrite */ = Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Digital_InitWrite_constructor(comp, 2, 2);
   return fmi2OK;
 }
 
@@ -137,7 +137,7 @@ static fmi2Status led_green_blink_functionODE(fmi2Component comp)
 
 static fmi2Status led_green_blink_functionOutputs(fmi2Component comp)
 {
-  comp->fmi2BooleanVars[0] /* booleanExpression1._y DISCRETE */ = (om_mod(comp->currentTime,0.4))>=(0.2); /* equation 3 */Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[2] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Digital_write(comp, comp->extObjs[0] /* digitalWriteBoolean1._digital EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Digital.InitWrite */, 3, comp->fmi2BooleanVars[0] /* booleanExpression1._y DISCRETE */);
+  comp->fmi2BooleanVars[0] /* booleanExpression1._y DISCRETE */ = (om_mod(comp->currentTime,0.2))>=(0.1); /* equation 3 */Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_RealTimeSynchronization_wait(comp, comp->extObjs[2] /* synchronizeRealtime1._sync EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.RealTimeSynchronization.Init */);Modelica__DeviceDrivers_EmbeddedTargets_AVR_Functions_Digital_write(comp, comp->extObjs[0] /* digitalWriteBoolean1._digital EXTOBJ: Modelica_DeviceDrivers.EmbeddedTargets.AVR.Functions.Digital.InitWrite */, 2, comp->fmi2BooleanVars[0] /* booleanExpression1._y DISCRETE */);
 }
 
 fmi2Status led_green_blink_fmi2DoStep(fmi2Component comp, fmi2Real currentCommunicationPoint, fmi2Real communicationStepSize, fmi2Boolean noSetFMUStatePriorToCurrentPoint)

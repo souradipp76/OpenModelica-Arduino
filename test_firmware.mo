@@ -1,5 +1,5 @@
 model test_firmware "Testing SerialCommunication with Arduino"
-  
+extends Modelica.Icons.UtilitiesPackage;  
 import sComm=Arduino.SerialCommunication.Functions;
 Integer h(fixed = false);
 Integer byte_read(fixed = false);

@@ -1,3 +1,3 @@
 long int hex2dec(char hexadecimal[]);
-char *dec2hex(long int decimalnum);
+void dec2hex(long int decimalnum,char hexadecimalnum[]);
 double ieeesingle2num(char hexa[]);

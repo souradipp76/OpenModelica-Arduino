@@ -19,332 +19,431 @@ int ascii_c(char c)
 	return (int)c;
 }
 
-double read_val(int addr_byte)
-{	
-	int h=open_serial(1,0,9600);
-	char array1[20]="";
-	if(addr_byte==86)
-    {	
-    	char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(86),ascii_n(00),ascii_n(2),ascii_n(39),ascii_n(15)};
-    	int j;
-    	for (j = 0; j < 8; ++j)
-    	{
-    		strcat(array1,arr[j]);
-    	}
-    	printf("Voltage(in V)=");
-	}
-    else if(addr_byte==88)
-    {	
-    	char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(88),ascii_n(00),ascii_n(2),ascii_n(70),ascii_n(204)};
-    	int j;
-    	for (j = 0; j < 8; ++j)
-    	{
-    		strcat(array1,arr[j]);
-    	}
-    	printf("Current(in A)=");
-	}
-    else if(addr_byte==78)
-    {	
-    	char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(78),ascii_n(00),ascii_n(2),ascii_n(167),ascii_n(8)};
-    	int j;
-    	for (j = 0; j < 8; ++j)
-    	{
-    		strcat(array1,arr[j]);
-    	}
-    	printf("Active Power(in W)=");
-	}
-
-	int wr=write_serial(1,array1,8);
-	char buf[12];
-	int rd=read_serial(1,buf,11);
-	int b1=0,b2=0,b3=0,b4=0;
-	int myresult[12];
-	int i;
-	for (i = 0; i < 11; ++i)
-	{
-		myresult[i]=ascii_c(buf[i]);
-	}
-	
-	int a1=myresult[5];
-	if (a1<16)
-	{
-		b1=1;
-	}
-	char* v1=dec2hex(a1);
-	if (b1)
-	{
-		strcat("0",v1);
-	}
-
-	int a2=myresult[6];
-	if (a2<16)
-	{
-		b2=1;
-	}
-	char* v2=dec2hex(a2);
-	if (b2)
-	{
-		strcat("0",v2);
-	}
-
-	int a3=myresult[7];
-	if (a3<16)
-	{
-		b3=1;
-	}
-	char* v3=dec2hex(a3);
-	if (b3)
-	{
-		strcat("0",v3);
-	}
-
-	int a4=myresult[8];
-	if (a4<16)
-	{
-		b4=1;
-	}
-	char* v4=dec2hex(a4);
-	if (b4)
-	{
-		strcat("0",v4);
-	}
-	char* a5[4]={v3,v4,v1,v2};
-	char a6[100];
-	for (i = 0; i < 4; ++i)
-	{
-		strcat(a6,a5[i]);	
-	}
-	int cl=close_serial(1);
-	double p=ieeesingle2num(a6);
-	printf("%f",p);
-	return p;
-}
-
 void read_voltage()
 {
-	int h=open_serial(1,0,9600);
-	char acc[10]="";
-    char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(86),ascii_n(00),ascii_n(2),ascii_n(39),ascii_n(15)};
-    int j;
-    for (j = 0; j < 8; ++j)
-    {
-    	strcat(acc,arr[j]);
-    }
-    //printf("%s\n",acc );
-    int wr=write_serial(1,arr,8);
-	char buf[12];
-	int rd = read_serial(1,buf,11);
-	int b1=0,b2=0,b3=0,b4=0;
-	int myresult[12];
-	int i;
-	for (i = 0; i < 11; ++i)
-	{
-		myresult[i]=ascii_c(buf[i]);
-	}
+	char arr[9]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(86),ascii_n(00),ascii_n(2),ascii_n(39),ascii_n(15),'\0'};
 	
-	int a1=myresult[5];
-	if (a1<16)
-	{
-		b1=1;
+	//printf("%s\n",arr);//debug
+    
+	int x,wr,rd;
+    char buf[12];
+    for(x=0;x<5;x++)
+    {
+        wr=write_serial(1,arr,8);
+        rd = read_serial(1,buf,11);
+		usleep(500);
 	}
-	char* v1=dec2hex(a1);
-	if (b1)
+	buf[11]='\0';
+    
+	//printf("%s\n",buf );//debug
+    
+	int b1=0,b2=0,b3=0,b4=0;
+    int myresult[12];
+    int i;
+    for (i = 0; i < 11; ++i)
+    {
+        myresult[i]=ascii_c(buf[i]);
+		//printf("%d",myresult[i]);//debug
+    }
+    
+	//printf("%d %d %d %d\n",myresult[4],myresult[5],myresult[6],myresult[7]);//debug
+    
+	int a1=myresult[4];
+    if (a1<16)
+    {
+        b1=1;
+    }
+    char v1[3];
+	dec2hex(a1,v1);
+    if (b1)
+    {
+        sprintf(v1,"0%s",v1);
+    }
+	else
 	{
-		strcat("0",v1);
-	}
-
-	int a2=myresult[6];
-	if (a2<16)
+		sprintf(v1,"%s",v1);
+	}	
+    int a2=myresult[5];
+    if (a2<16)
+    {
+        b2=1;
+    }
+    char v2[3];
+	dec2hex(a2,v2);
+    if (b2)
+    {
+        sprintf(v2,"0%s",v2);
+    }
+	else
 	{
-		b2=1;
+		sprintf(v2,"%s",v2);
 	}
-	char* v2=dec2hex(a2);
-	if (b2)
+    int a3=myresult[6];
+    if (a3<16)
+    {
+        b3=1;
+    }
+    char v3[3];
+	dec2hex(a3,v3);
+    if (b3)
+    {
+        sprintf(v3,"0%s",v3);
+    }
+	else
 	{
-		strcat("0",v2);
+		sprintf(v3,"%s",v3);
 	}
-
-	int a3=myresult[7];
-	if (a3<16)
+    int a4=myresult[7];
+    if (a4<16)
+    {
+        b4=1;
+    }
+    char v4[3];
+	dec2hex(a4,v4);
+    if (b4)
+    {
+        sprintf(v4,"0%s",v4);
+    }
+	else
 	{
-		b3=1;
-	}
-	char* v3=dec2hex(a3);
-	if (b3)
-	{
-		strcat("0",v3);
-	}
-
-	int a4=myresult[8];
-	if (a4<16)
-	{
-		b4=1;
-	}
-	char* v4=dec2hex(a4);
-	if (b4)
-	{
-		strcat("0",v4);
-	}
-	char* a5[4]={v3,v4,v1,v2};
-	char a6[100];
-	for (i = 0; i < 4; ++i)
-	{
-		strcat(a6,a5[i]);	
-	}
-	int cl=close_serial(1);
-	double p=ieeesingle2num(a6);
-	printf("Voltage(in V)=%f",p);
+		sprintf(v4,"%s",v4);
+	}	
+    char a6[20]="";
+	strcat(a6,v3);
+	strcat(a6,v4);
+	strcat(a6,v1);
+	strcat(a6,v2);
+	a6[8]='\0';
+	
+	//printf("%s",a6);//debug
+	
+    int cl=close_serial(1);
+    double p=ieeesingle2num(a6);
+    printf("Voltage(in V)=%f\n",p);
 }
 
 
 void read_current()
 {
-	int h=open_serial(1,0,9600);
-	char acc[10]="";
-    char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(88),ascii_n(00),ascii_n(2),ascii_n(70),ascii_n(204)};
-    int j;
-    for (j = 0; j < 8; ++j)
+	char arr[9]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(88),ascii_n(00),ascii_n(2),ascii_n(70),ascii_n(204),'\0'};
+	//printf("%s\n",arr);//debug
+    
+	int x,wr,rd;
+    char buf[12];
+    for(x=0;x<5;x++)
     {
-    	strcat(acc,arr[j]);
-    }
-        //printf("%s\n",acc );
-    int wr=write_serial(1,arr,8);
-	char buf[12];
-	int rd=read_serial(1,buf,11);
+        wr=write_serial(1,arr,8);
+        rd = read_serial(1,buf,11);
+		usleep(500);
+	}
+	buf[11]='\0';
+    
+	//printf("%s\n",buf );//debug
+    
 	int b1=0,b2=0,b3=0,b4=0;
-	int myresult[12];
-	int i;
-	for (i = 0; i < 11; ++i)
+    int myresult[12];
+    int i;
+    for (i = 0; i < 11; ++i)
+    {
+        myresult[i]=ascii_c(buf[i]);
+		//printf("%d",myresult[i]);//debug
+    }
+    
+	//printf("%d %d %d %d\n",myresult[4],myresult[5],myresult[6],myresult[7]);//debug
+    
+	int a1=myresult[4];
+    if (a1<16)
+    {
+        b1=1;
+    }
+    char v1[3];
+	dec2hex(a1,v1);
+    if (b1)
+    {
+        sprintf(v1,"0%s",v1);
+    }
+	else
 	{
-		myresult[i]=ascii_c(buf[i]);
-	}
-
-	int a1=myresult[5];
-	if (a1<16)
+		sprintf(v1,"%s",v1);
+	}	
+    int a2=myresult[5];
+    if (a2<16)
+    {
+        b2=1;
+    }
+    char v2[3];
+	dec2hex(a2,v2);
+    if (b2)
+    {
+        sprintf(v2,"0%s",v2);
+    }
+	else
 	{
-		b1=1;
+		sprintf(v2,"%s",v2);
 	}
-	char* v1=dec2hex(a1);
-	if (b1)
+    int a3=myresult[6];
+    if (a3<16)
+    {
+        b3=1;
+    }
+    char v3[3];
+	dec2hex(a3,v3);
+    if (b3)
+    {
+        sprintf(v3,"0%s",v3);
+    }
+	else
 	{
-		strcat("0",v1);
+		sprintf(v3,"%s",v3);
 	}
-
-	int a2=myresult[6];
-	if (a2<16)
+    int a4=myresult[7];
+    if (a4<16)
+    {
+        b4=1;
+    }
+    char v4[3];
+	dec2hex(a4,v4);
+    if (b4)
+    {
+        sprintf(v4,"0%s",v4);
+    }
+	else
 	{
-		b2=1;
-	}
-	char* v2=dec2hex(a2);
-	if (b2)
-	{
-		strcat("0",v2);
-	}
-
-	int a3=myresult[7];
-	if (a3<16)
-	{
-		b3=1;
-	}
-	char* v3=dec2hex(a3);
-	if (b3)
-	{
-		strcat("0",v3);
-	}
-
-	int a4=myresult[8];
-	if (a4<16)
-	{
-		b4=1;
-	}
-	char* v4=dec2hex(a4);
-	if (b4)
-	{
-		strcat("0",v4);
-	}
-	char* a5[4]={v3,v4,v1,v2};
-	char a6[100];
-	for (i = 0; i < 4; ++i)
-	{
-		strcat(a6,a5[i]);	
-	}
-	int cl=close_serial(1);
-	double p=ieeesingle2num(a6);
-	printf("Current(in A)=%f",p);
+		sprintf(v4,"%s",v4);
+	}	
+    char a6[20]="";
+	strcat(a6,v3);
+	strcat(a6,v4);
+	strcat(a6,v1);
+	strcat(a6,v2);
+	a6[8]='\0';
+	
+	//printf("%s",a6);//debug
+	
+    int cl=close_serial(1);
+    double p=ieeesingle2num(a6);
+    printf("Current(in A)=%f\n",p);
 }
 
 void read_active_power()
 {
-	int h=open_serial(1,0,9600);
-	char acc[10]="";
-    char arr[8]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(78),ascii_n(00),ascii_n(2),ascii_n(167),ascii_n(8)};
-    int j;
-    for (j = 0; j < 8; ++j)
+    char arr[9]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(78),ascii_n(00),ascii_n(2),ascii_n(167),ascii_n(8),'\0'};
+	//printf("%s\n",arr);//debug
+    
+	int x,wr,rd;
+    char buf[12];
+    for(x=0;x<5;x++)
     {
-    	strcat(acc,arr[j]);
-    }
-        //printf("%s\n",acc );
-    int wr=write_serial(1,arr,8);
-	char buf[12];
-	int rd=read_serial(1,buf,11);
+        wr=write_serial(1,arr,8);
+        rd = read_serial(1,buf,11);
+		usleep(500);
+	}
+	buf[11]='\0';
+    
+	//printf("%s\n",buf );//debug
+    
 	int b1=0,b2=0,b3=0,b4=0;
-	int myresult[12];
-	int i;
-	for (i = 0; i < 11; ++i)
+    int myresult[12];
+    int i;
+    for (i = 0; i < 11; ++i)
+    {
+        myresult[i]=ascii_c(buf[i]);
+		//printf("%d",myresult[i]);//debug
+    }
+    
+	//printf("%d %d %d %d\n",myresult[4],myresult[5],myresult[6],myresult[7]);//debug
+    
+	int a1=myresult[4];
+    if (a1<16)
+    {
+        b1=1;
+    }
+    char v1[3];
+	dec2hex(a1,v1);
+    if (b1)
+    {
+        sprintf(v1,"0%s",v1);
+    }
+	else
 	{
-		myresult[i]=ascii_c(buf[i]);
+		sprintf(v1,"%s",v1);
+	}	
+    int a2=myresult[5];
+    if (a2<16)
+    {
+        b2=1;
+    }
+    char v2[3];
+	dec2hex(a2,v2);
+    if (b2)
+    {
+        sprintf(v2,"0%s",v2);
+    }
+	else
+	{
+		sprintf(v2,"%s",v2);
 	}
+    int a3=myresult[6];
+    if (a3<16)
+    {
+        b3=1;
+    }
+    char v3[3];
+	dec2hex(a3,v3);
+    if (b3)
+    {
+        sprintf(v3,"0%s",v3);
+    }
+	else
+	{
+		sprintf(v3,"%s",v3);
+	}
+    int a4=myresult[7];
+    if (a4<16)
+    {
+        b4=1;
+    }
+    char v4[3];
+	dec2hex(a4,v4);
+    if (b4)
+    {
+        sprintf(v4,"0%s",v4);
+    }
+	else
+	{
+		sprintf(v4,"%s",v4);
+	}	
+    char a6[20]="";
+	strcat(a6,v3);
+	strcat(a6,v4);
+	strcat(a6,v1);
+	strcat(a6,v2);
+	a6[8]='\0';
 	
-	int a1=myresult[5];
-	if (a1<16)
-	{
-		b1=1;
-	}
-	char* v1=dec2hex(a1);
-	if (b1)
-	{
-		strcat("0",v1);
-	}
+	//printf("%s",a6);//debug
+	
+    int cl=close_serial(1);
+    double p=ieeesingle2num(a6);
+    printf("Active Power(in W)=%f\n",p);
+}
 
-	int a2=myresult[6];
-	if (a2<16)
-	{
-		b2=1;
+double read_val(int addr_byte)
+{	
+	char* arr;
+    if(addr_byte==86)
+    {   
+        char code[9]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(86),ascii_n(00),ascii_n(2),ascii_n(39),ascii_n(15),'\0'};
+        arr = code;
+        printf("Voltage(in V)=");
+    }
+    else if(addr_byte==88)
+    {   
+        char code[9]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(88),ascii_n(00),ascii_n(2),ascii_n(70),ascii_n(204),'\0'};
+        arr =code;
+        printf("Current(in A)=");
+    }
+    else if(addr_byte==78)
+    {   
+        char code[9]={ascii_n(1),ascii_n(3),ascii_n(15),ascii_n(78),ascii_n(00),ascii_n(2),ascii_n(167),ascii_n(8),'\0'};
+        arr = code;
+        printf("Active Power(in W)=");
+    }
+	//printf("%s\n",arr);//debug
+    
+	int x,wr,rd;
+    char buf[12];
+    for(x=0;x<5;x++)
+    {
+        wr=write_serial(1,arr,8);
+        rd = read_serial(1,buf,11);
+		usleep(500);
 	}
-	char* v2=dec2hex(a2);
-	if (b2)
+	buf[11]='\0';
+    
+	//printf("%s\n",buf );//debug
+    
+	int b1=0,b2=0,b3=0,b4=0;
+    int myresult[12];
+    int i;
+    for (i = 0; i < 11; ++i)
+    {
+        myresult[i]=ascii_c(buf[i]);
+		//printf("%d",myresult[i]);//debug
+    }
+    
+	//printf("%d %d %d %d\n",myresult[4],myresult[5],myresult[6],myresult[7]);//debug
+    
+	int a1=myresult[4];
+    if (a1<16)
+    {
+        b1=1;
+    }
+    char v1[3];
+	dec2hex(a1,v1);
+    if (b1)
+    {
+        sprintf(v1,"0%s",v1);
+    }
+	else
 	{
-		strcat("0",v2);
-	}
-
-	int a3=myresult[7];
-	if (a3<16)
+		sprintf(v1,"%s",v1);
+	}	
+    int a2=myresult[5];
+    if (a2<16)
+    {
+        b2=1;
+    }
+    char v2[3];
+	dec2hex(a2,v2);
+    if (b2)
+    {
+        sprintf(v2,"0%s",v2);
+    }
+	else
 	{
-		b3=1;
+		sprintf(v2,"%s",v2);
 	}
-	char* v3=dec2hex(a3);
-	if (b3)
+    int a3=myresult[6];
+    if (a3<16)
+    {
+        b3=1;
+    }
+    char v3[3];
+	dec2hex(a3,v3);
+    if (b3)
+    {
+        sprintf(v3,"0%s",v3);
+    }
+	else
 	{
-		strcat("0",v3);
+		sprintf(v3,"%s",v3);
 	}
-
-	int a4=myresult[8];
-	if (a4<16)
+    int a4=myresult[7];
+    if (a4<16)
+    {
+        b4=1;
+    }
+    char v4[3];
+	dec2hex(a4,v4);
+    if (b4)
+    {
+        sprintf(v4,"0%s",v4);
+    }
+	else
 	{
-		b4=1;
-	}
-	char* v4=dec2hex(a4);
-	if (b4)
-	{
-		strcat("0",v4);
-	}
-	char* a5[4]={v3,v4,v1,v2};
-	char a6[100];
-	for (i = 0; i < 4; ++i)
-	{
-		strcat(a6,a5[i]);	
-	}
-	int cl=close_serial(1);
-	double p=ieeesingle2num(a6);
-	printf("Active Power(in W)=%f",p);
+		sprintf(v4,"%s",v4);
+	}	
+    char a6[20]="";
+	strcat(a6,v3);
+	strcat(a6,v4);
+	strcat(a6,v1);
+	strcat(a6,v2);
+	a6[8]='\0';
+	
+	//printf("%s",a6);//debug
+	
+    int cl=close_serial(1);
+    double p=ieeesingle2num(a6);
+    printf("%f\n",p);
+    return p;
 }
